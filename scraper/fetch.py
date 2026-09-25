@@ -26,6 +26,11 @@ Dallas portal gotchas (learned live):
     retry once with a further 4-day clamp.
   - advancedSearch+docTypes= (the Bexar pattern) is NOT honored here;
     quickSearch + _docTypes=<CODE> is what the portal itself produces.
+  - The portal reliably serves only the FIRST search of a browser
+    session; later deep-linked searches in the same session come back
+    "No Results" (proven on run #1: LP=10 then all zeros). Each search
+    therefore runs in a FRESH browser context with its own homepage
+    warmup; pagination offsets within one search stay in that context.
 
 Run:
     python scraper/fetch.py                # default 7-day lookback
@@ -394,10 +399,17 @@ class ClerkScraper:
                 log.info("  no results (timeout) [%s]", label)
                 return
 
-    def _fetch_pages(self, page, build_url, parse, label: str) -> list:
-        """Paginate one search; returns parsed records (dupes included)."""
+    def _fetch_pages(self, page, build_url, parse, label: str,
+                     start_offset: int = 0) -> tuple:
+        """Paginate one search inside one context.
+
+        Returns (records, stop_offset, natural_end): natural_end is True on
+        a partial page or the page cap; False when a page came back empty
+        after full pages - which may be the session block, so the caller
+        can resume from stop_offset in a fresh context.
+        """
         out = []
-        offset = 0
+        offset = start_offset
         page_idx = 0
         while page_idx < MAX_PAGES_PER_DOC_TYPE:
             url = build_url(offset)
@@ -409,17 +421,62 @@ class ClerkScraper:
                 page.goto(url, wait_until="networkidle", timeout=30000)
             except Exception as exc:
                 log.warning("  page error [%s offset=%d]: %s", label, offset, exc)
-                break
+                return out, offset, False
             self._await_ready(page, f"{label} offset={offset}", url)
             recs = parse(page.content())
             if not recs:
-                break
+                return out, offset, False
             out.extend(recs)
             if len(recs) < PAGE_SIZE:
-                break   # partial page == last page
+                return out, offset, True   # partial page == last page
             offset += PAGE_SIZE
             page_idx += 1
             time.sleep(0.6)
+        return out, offset, True
+
+    _UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+           "AppleWebKit/537.36 (KHTML, like Gecko) "
+           "Chrome/124.0.0.0 Safari/537.36")
+
+    _MAX_CONTEXT_RESTARTS = 12
+
+    def _run_in_fresh_context(self, browser, build_url, parse, label) -> list:
+        """One search = fresh browser context(s) (fresh cookies), each with
+        its own homepage warmup. The portal only reliably serves the first
+        search of a session; reusing a context zeroes later searches. If
+        pagination dies mid-search (empty page after full pages), resume
+        from that offset in another fresh context; a fresh context that
+        still returns nothing at that offset is a genuine end."""
+        out = []
+        offset = 0
+        for attempt in range(self._MAX_CONTEXT_RESTARTS):
+            ctx = browser.new_context(
+                user_agent=self._UA, viewport={"width": 1280, "height": 800})
+            try:
+                page = ctx.new_page()
+                try:
+                    page.goto(CLERK_BASE_URL, wait_until="domcontentloaded",
+                              timeout=30000)
+                except Exception as exc:
+                    log.warning("  warmup failed [%s]: %s", label, exc)
+                time.sleep(1.0)
+                recs, offset, done = self._fetch_pages(
+                    page, build_url, parse, label, start_offset=offset)
+            finally:
+                try:
+                    ctx.close()
+                except Exception:
+                    pass
+            out.extend(recs)
+            if done:
+                return out
+            if not recs:
+                # Fresh context produced nothing at this offset: genuine
+                # end (or empty search) rather than a session block.
+                return out
+            log.info("  [%s] resuming at offset %d in fresh context "
+                     "(attempt %d)", label, offset, attempt + 2)
+            time.sleep(1.5)
         return out
 
     def run(self) -> list:
@@ -427,20 +484,6 @@ class ClerkScraper:
         all_records = []
         with sync_playwright() as pw:
             browser = pw.chromium.launch(headless=True)
-            context = browser.new_context(
-                user_agent=(
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/124.0.0.0 Safari/537.36"
-                ),
-                viewport={"width": 1280, "height": 800},
-            )
-            page = context.new_page()
-            try:
-                page.goto(CLERK_BASE_URL, wait_until="domcontentloaded", timeout=30000)
-                log.info("Session warmed")
-            except Exception as exc:
-                log.warning("Warmup failed: %s", exc)
 
             def add_unique(recs):
                 n = 0
@@ -452,18 +495,18 @@ class ClerkScraper:
                         n += 1
                 return n
 
-            # ---- Real Property doc types ----
+            # ---- Real Property doc types (fresh context per search) ----
             rp_total = 0
             for doc_code, cat, cat_label in DOC_TYPES:
                 log.info("Searching RP docType '%s' [%s]", doc_code, cat)
-                recs = self._fetch_pages(
-                    page, lambda off, dc=doc_code: self._build_url(dc, off),
+                recs = self._run_in_fresh_context(
+                    browser, lambda off, dc=doc_code: self._build_url(dc, off),
                     lambda h, c=cat, cl=cat_label: self._parse_rp_html(h, c, cl),
                     doc_code)
                 n = add_unique(recs)
                 rp_total += n
                 log.info("  -> %d unique records for '%s'", n, doc_code)
-                time.sleep(0.4)
+                time.sleep(1.5)
 
             # Zero-day guard: cert-date drift can silently empty the whole RP
             # pass. Re-run once with the window pulled back 4 more days.
@@ -471,19 +514,19 @@ class ClerkScraper:
                 log.warning("RP pass returned 0 records - retrying with "
                             "4-day certified-date clamp")
                 for doc_code, cat, cat_label in DOC_TYPES:
-                    recs = self._fetch_pages(
-                        page,
+                    recs = self._run_in_fresh_context(
+                        browser,
                         lambda off, dc=doc_code: self._build_url(dc, off, clamp_extra_days=4),
                         lambda h, c=cat, cl=cat_label: self._parse_rp_html(h, c, cl),
                         f"{doc_code}(clamped)")
                     rp_total += add_unique(recs)
-                    time.sleep(0.4)
+                    time.sleep(1.5)
                 log.info("Clamped RP pass: %d records", rp_total)
 
             # ---- Foreclosures department (upcoming trustee sales) ----
             log.info("Searching FC department (upcoming trustee sales)")
-            fc_recs = self._fetch_pages(
-                page, self._build_fc_url, self._parse_fc_html, "FC")
+            fc_recs = self._run_in_fresh_context(
+                browser, self._build_fc_url, self._parse_fc_html, "FC")
             n = add_unique(fc_recs)
             log.info("  -> %d unique FC records", n)
 
