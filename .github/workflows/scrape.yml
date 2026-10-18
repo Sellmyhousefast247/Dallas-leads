@@ -35,6 +35,12 @@ jobs:
         env:
           LOOKBACK_DAYS: "7"
 
+      - name: Trustee deeds (surplus funds feed)
+        run: python scraper/trustee_deeds.py
+        continue-on-error: true   # surplus feed must never break the main daily scrape
+        env:
+          DEED_LOOKBACK_DAYS: "35"
+
       - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
