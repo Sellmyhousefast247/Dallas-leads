@@ -1,1 +1,1 @@
-instrument_number,recording_date,sale_date,grantor,grantee,beneficiary,consideration,property_address,parcel_id,doc_type,legal,clerk_url,county
+instrument_number,recording_date,sale_date,grantor,grantee,beneficiary,consideration,original_principal,mortgagors,owner_full,property_address,mail_address,assessed_value,parcel_source,parcel_id,doc_type,legal,clerk_url,ocr_used,county
