@@ -554,14 +554,147 @@ def _fill_from_parcel(r: dict, hit: dict, api: dict, source: str) -> None:
     r["parcel_source"] = source
 
 
+
+
+# ---------------------------------------------------------------------------
+# DCAD bulk lookup (built weekly by scraper/dcad_bulk.py) — full-county local
+# join: owner name, legal, and street address indexes over ~844k parcels.
+# ---------------------------------------------------------------------------
+BULK_LOOKUP = DATA / "dcad_lookup.csv.gz"
+
+
+def _name_key(name: str) -> tuple:
+    import fetch as _f
+    toks = _f.normalize_owner_for_parcel(name).split()
+    return tuple(toks[:2]) if len(toks) >= 2 else ()
+
+
+def _legal_key(legal: str) -> tuple:
+    up = (legal or "").upper()
+    # grid-style "Name: X Lot: N Block: B" and roll-style "X BLK B LT N" both parse
+    lot = re.search(r"\bL(?:O)?TS?[:\s]+([\w-]+)", up)
+    blk = re.search(r"\bBL(?:OC)?K[:\s]+([\w-]+)", up)
+    subpart = re.split(r"\bBL(?:OC)?K\b|\bL(?:O)?TS?\b", up)[0]
+    subpart = re.sub(r".*\bNAME:", "", subpart)          # strip "Subdivision- Town: X Name:"
+    subpart = re.sub(r"\b(SUBDIVISION|TOWN:?\s*\w*|NAME)\b", " ", subpart)
+    sub = _subdiv_tokens(subpart)
+    if sub and (lot or blk):
+        return (sub[0], lot.group(1) if lot else "", blk.group(1) if blk else "")
+    return ()
+
+
+def _addr_key(addr: str) -> tuple:
+    m = re.match(r"\s*(\d{1,6})[A-Za-z]?\s+(?:[NSEW]\.?\s+)?([A-Za-z]+)", addr or "")
+    return (m.group(1), m.group(2).upper()) if m else ()
+
+
+class BulkLookup:
+    def __init__(self, path: pathlib.Path):
+        import gzip as _gz
+        import csv as _csv
+        self.by_name: dict = {}
+        self.by_legal: dict = {}
+        self.by_addr: dict = {}
+        self.rows = 0
+        with _gz.open(path, "rt") as f:
+            for row in _csv.DictReader(f):
+                self.rows += 1
+                nk = _name_key(row["owner"])
+                if nk:
+                    self.by_name.setdefault(nk, []).append(row)
+                lk = _legal_key(row["legal"])
+                if lk:
+                    self.by_legal.setdefault(lk, []).append(row)
+                ak = _addr_key(row["situs_address"])
+                if ak:
+                    self.by_addr.setdefault(ak, []).append(row)
+        log.info("DCAD bulk lookup loaded: %s parcels", f"{self.rows:,}")
+
+    def match(self, r: dict) -> tuple:
+        """Returns (row, how) or (None, None). Unique hits only — never guess."""
+        legal_key = _legal_key(r.get("legal") or "")
+        # 1) owner name (both token orders), disambiguated by legal when needed
+        cands = []
+        if r.get("mortgagors"):
+            cands.append(r["mortgagors"])
+        g = (r.get("grantor") or "").strip()
+        if g and not TRUSTEE_GRANTOR_RE.search(g):
+            cands.append(g)
+        for cand in cands:
+            import fetch as _f
+            toks = _f.normalize_owner_for_parcel(cand).split()
+            # also use the raw name's tokens so "JUAN R. MARTINEZ" yields (MARTINEZ, JUAN)
+            raw = [t for t in re.sub(r"[^A-Za-z ]", " ", cand.upper()).split() if len(t) > 1]
+            keys = []
+            if len(toks) >= 2:
+                keys += [(toks[0], toks[1]), (toks[1], toks[0])]
+            if len(raw) >= 2:
+                keys += [(raw[-1], raw[0]), (raw[0], raw[-1])]   # FIRST [MI] LAST → LAST FIRST
+            keys = list(dict.fromkeys(keys))
+            for key in keys:
+                hits = self.by_name.get(key, [])
+                if len(hits) == 1:
+                    return hits[0], "bulk:owner"
+                if len(hits) > 1 and legal_key:
+                    narrowed = [h for h in hits if _legal_key(h["legal"]) == legal_key]
+                    if len(narrowed) == 1:
+                        return narrowed[0], "bulk:owner+legal"
+        # 2) legal description
+        if legal_key:
+            hits = self.by_legal.get(legal_key, [])
+            if len(hits) == 1:
+                return hits[0], "bulk:legal"
+        # 3) OCR'd street address
+        ak = _addr_key(r.get("property_address") or "")
+        if ak:
+            hits = self.by_addr.get(ak, [])
+            if len(hits) == 1:
+                return hits[0], "bulk:address"
+        return None, None
+
+
+def _fill_from_bulk(r: dict, row: dict, how: str) -> None:
+    r["owner_full"] = row["owner"]
+    situs = row["situs_address"]
+    if situs:
+        city = row.get("situs_city") or ""
+        zp = row.get("situs_zip") or ""
+        r["property_address"] = _re_ws(f"{situs}, {city.title()}, TX {zp}").strip(" ,")
+    if row.get("mail_address"):
+        r["mail_address"] = row["mail_address"]
+    if row.get("value"):
+        r["assessed_value"] = row["value"]
+    if not r.get("parcel_id"):
+        r["parcel_id"] = row["account"]
+    r["parcel_source"] = how
+
+
+def _re_ws(s: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r",\s*,", ",", s))
+
+
 def enrich_parcels(rows: list) -> dict:
     """Cross-reference each deed against the county appraisal district:
     owner-name lookup first (tax roll still shows the foreclosed owner), legal-description
     fallback accepted only on a single unambiguous hit. Blank stays blank."""
     sys.path  # keep import local pattern obvious
     from fetch import _sql_lit, normalize_owner_for_parcel
-    stats = {"api_missing": set(), "owner_hits": 0, "legal_hits": 0, "unmatched": 0}
+    stats = {"api_missing": set(), "owner_hits": 0, "legal_hits": 0, "unmatched": 0,
+             "bulk_hits": 0, "bulk_rows": 0}
+    bulk = None
+    if BULK_LOOKUP.exists():
+        try:
+            bulk = BulkLookup(BULK_LOOKUP)
+            stats["bulk_rows"] = bulk.rows
+        except Exception as exc:
+            log.warning("bulk lookup unusable (%s) — falling back to parcel API", exc)
     for r in rows:
+        if bulk is not None and r.get("county", "dallas") == "dallas":
+            row, how = bulk.match(r)
+            if row:
+                _fill_from_bulk(r, row, how)
+                stats["bulk_hits"] += 1
+                continue
         api = PARCEL_APIS.get(r.get("county", "dallas"))
         if not api:
             stats["api_missing"].add(r.get("county"))

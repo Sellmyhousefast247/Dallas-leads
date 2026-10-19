@@ -31,6 +31,20 @@ jobs:
           pip install requests beautifulsoup4 lxml playwright pytesseract pillow
           python -m playwright install --with-deps chromium
 
+      - name: Restore DCAD bulk lookup (weekly cache)
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/dcad_lookup.csv.gz
+            data/dcad_lookup.meta.json
+          key: dcad-lookup-v1-${{ github.run_id }}
+          restore-keys: dcad-lookup-v1-
+
+      - name: DCAD bulk sync (full-county property roll)
+        run: python scraper/dcad_bulk.py   # skips download while lookup is < 6 days old
+        continue-on-error: true
+        timeout-minutes: 20
+
       - name: Run pipeline
         run: python scraper/fetch.py
         timeout-minutes: 40
