@@ -17,7 +17,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-22.04
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
 
@@ -32,16 +32,20 @@ jobs:
 
       - name: Run pipeline
         run: python scraper/fetch.py
+        timeout-minutes: 40
         env:
           LOOKBACK_DAYS: "7"
 
       - name: Trustee deeds (surplus funds feed)
         run: python scraper/trustee_deeds.py
+        if: always()              # runs even when the main pipeline step fails/times out
         continue-on-error: true   # surplus feed must never break the main daily scrape
+        timeout-minutes: 30
         env:
           DEED_LOOKBACK_DAYS: "35"
 
       - name: Commit results
+        if: always()              # commit whatever data was produced, even on a partial run
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
