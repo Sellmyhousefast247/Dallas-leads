@@ -1,0 +1,31 @@
+{
+ "generated_at": "2026-10-19T02:04:54.904421",
+ "window": [
+  "2026-09-11",
+  "2026-10-16"
+ ],
+ "counties": {
+  "dallas": {
+   "confirmed_codes": [
+    "TD"
+   ],
+   "deeds": 50,
+   "with_consideration": 0,
+   "warning": null
+  },
+  "bexar": {
+   "confirmed_codes": [],
+   "deeds": 0,
+   "with_consideration": 0,
+   "warning": "bexar: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
+  },
+  "tarrant": {
+   "confirmed_codes": [],
+   "deeds": 0,
+   "with_consideration": 0,
+   "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
+  }
+ },
+ "deeds": 50,
+ "with_consideration": 0
+}
