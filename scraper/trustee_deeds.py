@@ -87,9 +87,30 @@ OCR_SALEDATE_RE = re.compile(
     r"(?:date\s+of\s+sale|sale\s+(?:was\s+)?(?:held|conducted)\s+on|sold\s+on)\s*[:\-]?\s*"
     r"([A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|\d{1,2}/\d{1,2}/\d{4})", re.IGNORECASE)
 
+OCR_ADDRESS_RE = re.compile(
+    r"(?:commonly\s+known\s+as|property\s+address)[:\s]+(\d{1,6}[^,\n]{4,60}(?:,\s*[^,\n]{2,40}){0,2})",
+    re.IGNORECASE)
+
 FIELDS = ["instrument_number", "recording_date", "sale_date", "grantor", "grantee",
           "beneficiary", "consideration", "original_principal", "mortgagors",
-          "property_address", "parcel_id", "doc_type", "legal", "clerk_url", "ocr_used"]
+          "owner_full", "property_address", "mail_address", "assessed_value",
+          "parcel_source", "parcel_id", "doc_type", "legal", "clerk_url", "ocr_used"]
+
+# --- County appraisal-district parcel APIs (ArcGIS). Only configured, verified entries
+# are queried; counties without one are reported in the summary, never guessed. ---
+PARCEL_APIS = {
+    "dallas": {
+        "url": "https://maps.dcad.org/prdwa/rest/services/Property/ParcelQuery/MapServer/4/query",
+        "owner": "OWNERNME1", "owner2": "OWNERNME2", "addr": "SITEADDRESS",
+        "subdiv": "CNVYNAME", "legal": "PRPRTYDSCRP",
+        "mail": ("PSTLADDRESS", "PSTLCITY", "PSTLSTATE", "PSTLZIP5"),
+        "value": "CNTASSDVAL",
+    },
+    # bexar / tarrant: BCAD & TAD endpoints to be verified before adding — do not guess.
+}
+TRUSTEE_GRANTOR_RE = re.compile(r"\b(TR(USTEE)?S?|SUBSTITUTE|LLC|INC|CORP|BANK|AUCTION|LAW|PLLC)\b", re.IGNORECASE)
+ORDINALS = {"ONE": "1", "TWO": "2", "THREE": "3", "FOUR": "4", "FIVE": "5", "SIX": "6",
+            "SEVEN": "7", "EIGHT": "8", "NINE": "9", "TEN": "10"}
 
 # Reuse the exact grid column map + ready JS from the proven scraper
 _SC = fetch.ClerkScraper if hasattr(fetch, "ClerkScraper") else None
@@ -344,6 +365,11 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                         sd = OCR_SALEDATE_RE.search(text)
                         if sd and not r.get("sale_date"):
                             r["sale_date"] = normalize_date(sd.group(1).replace(",", " ").strip())
+                        ad = OCR_ADDRESS_RE.search(text)
+                        if ad and not r.get("property_address"):
+                            addr = re.split(r"\s+(?:together|being|and\s+all)\b",
+                                            ad.group(1), 1)[0]
+                            r["property_address"] = re.sub(r"\s+", " ", addr).strip(" ,")
                         r["ocr_used"] = "1"
                     except Exception as exc:
                         log.warning("  OCR failed %s: %s", r["instrument_number"], exc)
@@ -357,6 +383,115 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
         except Exception:
             pass
     log.info("detail enrichment: %s", stats)
+    return stats
+
+
+LEGAL_RE = re.compile(r"Name:\s*(?P<name>.+?)\s+(?:Lot:\s*(?P<lot>[\w-]+))?\s*(?:Block:\s*(?P<blk>[\w-]+))?\s*(?:,|$)")
+TOWN_RE = re.compile(r"Town:\s*([A-Z &.-]+?)\s+Name:", re.IGNORECASE)
+
+
+def _subdiv_tokens(name: str) -> list:
+    """'WOODBROOK INSTALLMENT NO TWO' -> ['WOODBROOK', '2'] (DCAD abbreviates)."""
+    drop = {"INSTALLMENT", "INSTL", "NO", "PHASE", "PH", "SECTION", "SEC", "ADDITION", "ADDN",
+            "REVISED", "REV", "REPLAT", "ESTATES", "ESTATE", "THE", "OF", "AT", "ON"}
+    out = []
+    for t in re.sub(r"[^A-Z0-9 ]", " ", (name or "").upper()).split():
+        if t in ORDINALS:
+            out.append(ORDINALS[t])
+        elif t not in drop:
+            out.append(t)
+    return out
+
+
+def _arcgis_query(api: dict, where: str, n: int = 5) -> list:
+    import requests
+    fields = [api["owner"], api["owner2"], api["addr"], api["subdiv"], api["legal"],
+              api["value"], *api["mail"]]
+    try:
+        r = requests.get(api["url"], params={
+            "where": where, "outFields": ",".join(fields), "returnGeometry": "false",
+            "f": "json", "resultRecordCount": n}, timeout=25,
+            headers={"User-Agent": "DallasLeadScraper/1.0"})
+        return [f["attributes"] for f in r.json().get("features", [])]
+    except Exception as exc:
+        log.warning("  parcel query failed: %s", exc)
+        return []
+
+
+def _fill_from_parcel(r: dict, hit: dict, api: dict, source: str) -> None:
+    owner = " ".join(x for x in [hit.get(api["owner"]), hit.get(api["owner2"])] if x).strip()
+    r["owner_full"] = re.sub(r"\s+", " ", owner)
+    site = (hit.get(api["addr"]) or "").strip()
+    town = (TOWN_RE.search(r.get("legal") or "") or [None, ""])[1] if TOWN_RE.search(r.get("legal") or "") else ""
+    if site:
+        r["property_address"] = f"{site}, {town.title()}, TX".replace(", , ", ", ") if town else f"{site}, TX"
+    ma, mc, ms, mz = (str(hit.get(k) or "").strip() for k in api["mail"])
+    if ma:
+        r["mail_address"] = re.sub(r"\s+", " ", f"{ma}, {mc}, {ms} {mz}")
+    if hit.get(api["value"]) is not None:
+        r["assessed_value"] = str(hit[api["value"]])
+    r["parcel_source"] = source
+
+
+def enrich_parcels(rows: list) -> dict:
+    """Cross-reference each deed against the county appraisal district:
+    owner-name lookup first (tax roll still shows the foreclosed owner), legal-description
+    fallback accepted only on a single unambiguous hit. Blank stays blank."""
+    sys.path  # keep import local pattern obvious
+    from fetch import _sql_lit, normalize_owner_for_parcel
+    stats = {"api_missing": set(), "owner_hits": 0, "legal_hits": 0, "unmatched": 0}
+    for r in rows:
+        api = PARCEL_APIS.get(r.get("county", "dallas"))
+        if not api:
+            stats["api_missing"].add(r.get("county"))
+            continue
+        legal = r.get("legal") or ""
+        m = LEGAL_RE.search(legal)
+        sub_tokens = _subdiv_tokens(m.group("name")) if m else []
+
+        # 1) owner-name path: OCR mortgagor, else a person-looking grantor from the grid
+        candidates = []
+        if r.get("mortgagors"):
+            candidates.append(r["mortgagors"])
+        g = (r.get("grantor") or "").strip()
+        if g and not TRUSTEE_GRANTOR_RE.search(g):
+            candidates.append(g)
+        hit = None
+        for cand in candidates:
+            norm = normalize_owner_for_parcel(cand)
+            if len(norm) < 5:
+                continue
+            found = _arcgis_query(api, f"UPPER({api['owner']}) LIKE '{_sql_lit(norm)}%'")
+            if len(found) == 1:
+                hit = (found[0], "owner")
+            elif len(found) > 1 and sub_tokens:
+                # disambiguate by subdivision tokens
+                scored = [f for f in found
+                          if all(t in (f.get(api["subdiv"]) or "").upper() for t in sub_tokens[:2])]
+                if len(scored) == 1:
+                    hit = (scored[0], "owner+legal")
+            if hit:
+                break
+
+        # 2) legal fallback: single unambiguous parcel only
+        if not hit and m and sub_tokens:
+            parts = [f"UPPER({api['subdiv']}) LIKE '{_sql_lit(' '.join(sub_tokens[:2]))}%'"]
+            if m.group("lot"):
+                parts.append(f"{api['legal']} LIKE '%LT {_sql_lit(m.group('lot'))}%'")
+            if m.group("blk"):
+                parts.append(f"{api['legal']} LIKE '%BLK%{_sql_lit(m.group('blk'))}%'")
+            found = _arcgis_query(api, " AND ".join(parts), n=3)
+            if len(found) == 1:
+                hit = (found[0], "legal")
+
+        if hit:
+            _fill_from_parcel(r, hit[0], api, f"dcad:{hit[1]}")
+            stats["owner_hits" if "owner" in hit[1] else "legal_hits"] += 1
+        else:
+            stats["unmatched"] += 1
+        time.sleep(0.3)
+    stats["api_missing"] = sorted(x for x in stats["api_missing"] if x)
+    log.info("parcel enrichment: %s", stats)
     return stats
 
 
@@ -375,13 +510,15 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
             for r in rows:
                 if DEED_RE.search(r["doc_type"]) and not APPT_RE.search(r["doc_type"]):
                     for k in ("sale_date", "beneficiary", "consideration", "original_principal",
-                              "mortgagors", "property_address", "parcel_id", "ocr_used"):
+                              "mortgagors", "owner_full", "property_address", "mail_address",
+                              "assessed_value", "parcel_source", "parcel_id", "ocr_used"):
                         r.setdefault(k, "")
                     r["county"] = county
                     all_rows[r["instrument_number"]] = r
         rows = sorted(all_rows.values(), key=lambda r: r["recording_date"], reverse=True)
         enrich_stats = enrich_detail(browser, rows) if rows else {}
         browser.close()
+    parcel_stats = enrich_parcels(rows) if rows else {}
 
     per_county = DATA / f"trustee_deeds_{county}.csv"
     with per_county.open("w", newline="") as f:
@@ -394,7 +531,10 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
         "with_consideration": sum(1 for r in rows if r.get("consideration")),
         "with_principal": sum(1 for r in rows if r.get("original_principal")),
         "with_mortgagor": sum(1 for r in rows if r.get("mortgagors")),
+        "with_owner": sum(1 for r in rows if r.get("owner_full")),
+        "with_address": sum(1 for r in rows if r.get("property_address")),
         "enrichment": enrich_stats,
+        "parcels": parcel_stats,
         "warning": None if confirmed else (
             f"{county}: NO trustee-deed doc code confirmed — set TRUSTEE_DEED_CODES "
             "after checking that portal's document-type filter manually."),

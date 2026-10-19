@@ -70,9 +70,10 @@ def build_leads() -> list:
     with (DATA / "trustee_deeds.csv").open() as f:
         for row in csv.DictReader(f):
             buyer = (row.get("grantee") or "").strip()
-            owner = (row.get("mortgagors") or "").strip()
+            owner = (row.get("owner_full") or row.get("mortgagors") or "").strip()
             price = _num(row.get("consideration"))
             principal = _num(row.get("original_principal"))
+            assessed = _num(row.get("assessed_value"))
 
             spread = price - principal if (price is not None and principal is not None) else None
 
@@ -106,6 +107,10 @@ def build_leads() -> list:
                 "sale_date": row.get("sale_date") or "",
                 "property": row.get("property_address") or row.get("legal") or "",
                 "owner": owner,
+                "owner_source": "appraisal district" if row.get("owner_full") else (
+                    "deed OCR" if row.get("mortgagors") else ""),
+                "mail_address": row.get("mail_address") or "",
+                "assessed_value": assessed,
                 "buyer": buyer,
                 "sale_price": price,
                 "original_principal": principal,
@@ -142,8 +147,11 @@ def render(leads: list) -> str:
         rows_html.append(f"""<tr>
 <td>{e(l['county'])}<br><span class=mut>{e(l['instrument'])}</span></td>
 <td class=wrap>{e(l['property'])[:90]}</td><td>{e(l['sale_date'] or l['recorded'])}</td>
-<td class=wrap>{e(l['owner']) or '—'}</td><td class=wrap>{e(l['buyer'])}</td>
+<td class=wrap>{e(l['owner']) or '—'}{('<br><span class=mut>' + e(l['owner_source']) + '</span>') if l['owner_source'] else ''}</td>
+<td class=wrap>{e(l['mail_address']) or '—'}</td>
+<td class=wrap>{e(l['buyer'])}</td>
 <td class=m>{money(l['sale_price'])}</td><td class=m>{money(l['original_principal'])}</td>
+<td class=m>{money(l['assessed_value'])}</td>
 <td class="m hit">{money(l['provisional_spread'])}</td>
 <td class=wrap>{e(liens_txt)}</td>
 <td><span class="badge s-{l['status']}">{l['status'].replace('_',' ')}</span><br>
@@ -177,8 +185,8 @@ a{{color:var(--blue);text-decoration:none}}.foot{{color:var(--mut);font-size:.7r
 <div class=note>Spreads are PROVISIONAL: winning bid − ORIGINAL loan principal from the deed's recital. Actual payoff, costs and lien balances are unverified until pulled per case.</div>
 <div class=cards>{card_html}</div>
 <div class=tablewrap><table><thead><tr>
-<th>County / Instr.</th><th>Property</th><th>Sale date</th><th>Former owner</th><th>Buyer</th>
-<th>Sale price</th><th>Orig. principal</th><th>Prov. spread</th><th>Liens on owner</th><th>Status</th><th>Doc</th>
+<th>County / Instr.</th><th>Property</th><th>Sale date</th><th>Former owner</th><th>Mailing addr</th><th>Buyer</th>
+<th>Sale price</th><th>Orig. principal</th><th>Assessed</th><th>Prov. spread</th><th>Liens on owner</th><th>Status</th><th>Doc</th>
 </tr></thead><tbody>{''.join(rows_html)}</tbody></table></div>
 <div class=foot>{len(leads)} deeds · lender buybacks are excluded from opportunity counts · lien matches are name-based flags from this run's recorded liens/judgments (no balances published)</div>
 </body></html>"""
