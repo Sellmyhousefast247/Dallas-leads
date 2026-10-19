@@ -58,7 +58,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet || git commit -m "leads $(date -u '+%Y-%m-%d')"
-          git pull --rebase origin main
+          git pull --rebase -X theirs origin main   # data files: this run's output wins the race
           git push
 
   deploy:
