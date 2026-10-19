@@ -86,8 +86,9 @@ CONSIDERATION_RE = re.compile(
 
 # --- OCR patterns for the deed's own text (substitute trustee's deed boilerplate) ---
 OCR_BID_RE = re.compile(
-    r"(?:sum|amount|consideration|bid|paid?)\s*(?:of|in|:)?[^$\n]{0,60}\$\s*([\d,]{4,}(?:\.\d{2})?)",
+    r"(?:sum|amount|consideration|bid(?:der)?|paid?|price|cash)\s*(?:of|in|for|:)?[^$\n]{0,80}\$\s*([\d,]{4,}(?:\.\d{2})?)",
     re.IGNORECASE)
+OCR_BID_FALLBACK_RE = re.compile(r"\$\s*([\d,]{5,}(?:\.\d{2})?)")
 OCR_PRINCIPAL_RE = re.compile(
     r"original\s+principal\s+(?:amount|sum|balance)?[^$]{0,60}\$\s*([\d,]{4,}(?:\.\d{2})?)",
     re.IGNORECASE)
@@ -152,19 +153,51 @@ def build_url(doc_code: str, start: datetime, end: datetime, offset: int = 0) ->
     return f"{CLERK_RESULTS}?{urlencode(params)}"
 
 
+HEADER_MAP = [
+    ("grantor", re.compile(r"GRANTOR", re.I)),
+    ("grantee", re.compile(r"GRANTEE", re.I)),
+    ("doc_type", re.compile(r"DOC(UMENT)?\s*TYPE", re.I)),
+    ("recording_date", re.compile(r"RECORDED|RECORD\s*DATE|FILE[DS]?\s*DATE", re.I)),
+    ("instrument_number", re.compile(r"DOC(UMENT)?\s*(#|NO|NUM)|INSTRUMENT", re.I)),
+    ("prop_city", re.compile(r"TOWN|CITY", re.I)),
+    ("legal", re.compile(r"LEGAL", re.I)),
+    ("property_address", re.compile(r"ADDRESS", re.I)),
+]
+
+
+def _column_map(table) -> dict:
+    """Map column indexes by header text — GovOS grids differ per county."""
+    header = table.find("tr")
+    cols = {}
+    if header:
+        for i, th in enumerate(header.find_all(["th", "td"])):
+            text = th.get_text(strip=True)
+            for key, pat in HEADER_MAP:
+                if key not in cols and pat.search(text):
+                    cols[key] = i
+    # fall back to the proven Dallas layout for anything unmapped
+    defaults = {"grantor": COL.COL_GRANTOR, "grantee": COL.COL_GRANTEE,
+                "doc_type": COL.COL_DOCTYPE, "recording_date": COL.COL_DATE,
+                "instrument_number": COL.COL_DOCNUM, "prop_city": COL.COL_TOWN,
+                "legal": COL.COL_LEGAL}
+    for k, v in defaults.items():
+        cols.setdefault(k, v)
+    return cols
+
+
 def parse_rows(html: str) -> list[dict]:
     soup = BeautifulSoup(html, "lxml")
     table = soup.find("table")
     if not table:
         return []
+    cols = _column_map(table)
     out = []
     for tr in table.find_all("tr")[1:]:
         cells = tr.find_all(["td", "th"])
-        if len(cells) <= COL.COL_DOCNUM:
-            continue
-        def cell(i):
-            return cells[i].get_text(strip=True) if i < len(cells) else ""
-        doc_num = cell(COL.COL_DOCNUM)
+        def cell(key):
+            i = cols.get(key, -1)
+            return cells[i].get_text(strip=True) if 0 <= i < len(cells) else ""
+        doc_num = cell("instrument_number")
         if not doc_num:
             continue
         url = ""
@@ -175,12 +208,13 @@ def parse_rows(html: str) -> list[dict]:
                 url = f"{CLERK_BASE_URL}/doc/{m.group(1)}"
         out.append({
             "instrument_number": doc_num,
-            "recording_date": normalize_date(cell(COL.COL_DATE)),
-            "grantor": cell(COL.COL_GRANTOR),
-            "grantee": cell(COL.COL_GRANTEE),
-            "doc_type": cell(COL.COL_DOCTYPE),
-            "legal": cell(COL.COL_LEGAL),
-            "prop_city": cell(COL.COL_TOWN),
+            "recording_date": normalize_date(cell("recording_date")),
+            "grantor": cell("grantor"),
+            "grantee": cell("grantee"),
+            "doc_type": cell("doc_type"),
+            "legal": cell("legal"),
+            "prop_city": cell("prop_city"),
+            "property_address": cell("property_address"),
             "clerk_url": url,
         })
     return out
@@ -363,24 +397,35 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
     ctx = browser.new_context(user_agent=UA, viewport={"width": 1280, "height": 1000})
     try:
         page = ctx.new_page()
-        captured: dict = {}
+        captured: list = []
 
         def _on_response(resp):
             # Deed page images stream as signed PNGs: /files/documents/<id>/images/<page>_1.png
             if re.search(r"/files/documents/\d+/images/[^/]+\.(png|jpe?g)", resp.url) and resp.ok:
                 try:
-                    captured.setdefault("img", resp.body())
+                    if len(captured) < 3:
+                        captured.append(resp.body())
                 except Exception:
                     pass
 
         page.on("response", _on_response)
+        samples_dir = DATA / "ocr_samples"
+        samples_dir.mkdir(exist_ok=True)
+        samples_saved = 0
         for r in rows[:MAX_DETAIL_VISITS]:
             if not r["clerk_url"]:
                 continue
-            captured.clear()
+            del captured[:]
             try:
                 page.goto(r["clerk_url"], wait_until="networkidle", timeout=30000)
                 time.sleep(1.2)
+                # advance the viewer to pull pages 2-3 (bid/principal often sit past the cover page)
+                for _ in range(2):
+                    try:
+                        page.keyboard.press("ArrowRight")
+                        time.sleep(1.0)
+                    except Exception:
+                        break
                 body = page.evaluate("() => (document.body && document.body.innerText) || ''")
             except Exception as exc:
                 log.warning("  detail failed %s: %s", r["instrument_number"], exc)
@@ -391,21 +436,32 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                 r["consideration"] = m.group(1).replace(",", "")
 
             if ocr_ok and not (r.get("consideration") and r.get("original_principal")):
-                data_url = None
-                if captured.get("img"):
-                    import base64 as _b64
-                    data_url = "data:image/png;base64," + _b64.b64encode(captured["img"]).decode()
-                if not data_url:
+                import base64 as _b64
+                data_urls = ["data:image/png;base64," + _b64.b64encode(b).decode() for b in captured]
+                if not data_urls:
                     try:
-                        data_url = page.evaluate(_GRAB_PREVIEW_JS)
+                        dom_grab = page.evaluate(_GRAB_PREVIEW_JS)
+                        if dom_grab:
+                            data_urls = [dom_grab]
                     except Exception:
-                        data_url = None
-                if data_url:
+                        pass
+                if data_urls:
                     try:
-                        text = _ocr_deed_text(data_url)
+                        text = "\n".join(_ocr_deed_text(u) for u in data_urls)
+                        if samples_saved < 3 and text.strip():
+                            (samples_dir / f"{r['county']}_{r['instrument_number']}.txt").write_text(text[:8000])
+                            samples_saved += 1
                         stats["ocr_ran"] += 1
                         if not r.get("consideration"):
                             r["consideration"] = _money_str(OCR_BID_RE.search(text))
+                        if not r.get("consideration"):
+                            # fallback: the largest dollar figure on the deed that is not
+                            # the original principal (bids are the big number on these docs)
+                            principal = _money_str(OCR_PRINCIPAL_RE.search(text))
+                            amts = [a.replace(",", "") for a in OCR_BID_FALLBACK_RE.findall(text)]
+                            amts = [a for a in amts if a != principal and float(a) >= 10000]
+                            if amts:
+                                r["consideration"] = max(amts, key=float)
                         r["original_principal"] = _money_str(OCR_PRINCIPAL_RE.search(text))
                         mm = OCR_MORTGAGOR_RE.search(text)
                         if mm:
@@ -505,10 +561,15 @@ def enrich_parcels(rows: list) -> dict:
         if g and not TRUSTEE_GRANTOR_RE.search(g):
             candidates.append(g)
         hit = None
+        name_variants = []
         for cand in candidates:
             norm = normalize_owner_for_parcel(cand)
-            if len(norm) < 5:
-                continue
+            if len(norm) >= 5:
+                name_variants.append(norm)
+                parts = norm.split()
+                if len(parts) == 2:                      # OCR order FIRST LAST → try LAST FIRST
+                    name_variants.append(f"{parts[1]} {parts[0]}")
+        for norm in name_variants:
             found = _arcgis_query(api, f"UPPER({api['owner']}) LIKE '{_sql_lit(norm)}%'")
             if len(found) == 1:
                 hit = (found[0], "owner")
