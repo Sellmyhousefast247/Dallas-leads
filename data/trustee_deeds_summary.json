@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-19T04:46:35.002608",
+ "generated_at": "2026-10-19T05:19:24.409254",
  "window": [
   "2026-09-11",
   "2026-10-16"
@@ -10,23 +10,23 @@
     "TD"
    ],
    "deeds": 50,
-   "with_consideration": 13,
+   "with_consideration": 24,
    "with_principal": 2,
    "with_mortgagor": 8,
-   "with_owner": 5,
-   "with_address": 7,
+   "with_owner": 7,
+   "with_address": 9,
    "enrichment": {
     "visited": 50,
-    "ocr_ran": 49,
-    "got_price": 13,
+    "ocr_ran": 50,
+    "got_price": 24,
     "got_principal": 2,
     "got_mortgagor": 8
    },
    "parcels": {
     "api_missing": [],
-    "owner_hits": 0,
+    "owner_hits": 2,
     "legal_hits": 5,
-    "unmatched": 45
+    "unmatched": 43
    },
    "warning": null
   },
@@ -56,5 +56,5 @@
   }
  },
  "deeds": 50,
- "with_consideration": 13
+ "with_consideration": 24
 }
