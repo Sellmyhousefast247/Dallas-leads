@@ -27,7 +27,8 @@ jobs:
 
       - name: Install
         run: |
-          pip install requests beautifulsoup4 lxml playwright
+          sudo apt-get install -y -q tesseract-ocr
+          pip install requests beautifulsoup4 lxml playwright pytesseract pillow
           python -m playwright install --with-deps chromium
 
       - name: Run pipeline
@@ -43,6 +44,12 @@ jobs:
         timeout-minutes: 30
         env:
           DEED_LOOKBACK_DAYS: "35"
+
+      - name: Surplus dashboard (auto-calculated)
+        run: python scraper/surplus_dashboard.py
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 5
 
       - name: Commit results
         if: always()              # commit whatever data was produced, even on a partial run

@@ -73,9 +73,23 @@ CONSIDERATION_RE = re.compile(
     r"(?:CONSIDERATION|SALES?\s+PRICE|AMOUNT)\s*[:\-]?\s*\$?\s*([\d,]+(?:\.\d{2})?)",
     re.IGNORECASE)
 
+# --- OCR patterns for the deed's own text (substitute trustee's deed boilerplate) ---
+OCR_BID_RE = re.compile(
+    r"(?:sum|amount|consideration|bid|paid?)\s*(?:of|in|:)?[^$\n]{0,60}\$\s*([\d,]{4,}(?:\.\d{2})?)",
+    re.IGNORECASE)
+OCR_PRINCIPAL_RE = re.compile(
+    r"original\s+principal\s+(?:amount|sum|balance)?[^$]{0,60}\$\s*([\d,]{4,}(?:\.\d{2})?)",
+    re.IGNORECASE)
+OCR_MORTGAGOR_RE = re.compile(
+    r"(?:Mortgagors?|Grantors?\s*\(Mortgagors?\)|executed\s+by)\s*[:\-]?\s*"
+    r"([A-Z][A-Za-z.'\-]*(?:\s+[A-Z][A-Za-z.'\-]*){0,4}(?:\s+(?:AND|and|&)\s+[A-Z][A-Za-z.'\-]*(?:\s+[A-Z][A-Za-z.'\-]*){0,3})?)")
+OCR_SALEDATE_RE = re.compile(
+    r"(?:date\s+of\s+sale|sale\s+(?:was\s+)?(?:held|conducted)\s+on|sold\s+on)\s*[:\-]?\s*"
+    r"([A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|\d{1,2}/\d{1,2}/\d{4})", re.IGNORECASE)
+
 FIELDS = ["instrument_number", "recording_date", "sale_date", "grantor", "grantee",
-          "beneficiary", "consideration", "property_address", "parcel_id",
-          "doc_type", "legal", "clerk_url"]
+          "beneficiary", "consideration", "original_principal", "mortgagors",
+          "property_address", "parcel_id", "doc_type", "legal", "clerk_url", "ocr_used"]
 
 # Reuse the exact grid column map + ready JS from the proven scraper
 _SC = fetch.ClerkScraper if hasattr(fetch, "ClerkScraper") else None
@@ -238,9 +252,63 @@ def discover_codes(browser, start, end) -> dict[str, list[dict]]:
     return confirmed
 
 
-def enrich_detail(browser, rows: list[dict]) -> None:
-    """Pull consideration (winning bid) from the deed detail page where stated."""
-    ctx = browser.new_context(user_agent=UA, viewport={"width": 1280, "height": 800})
+def _ocr_available() -> bool:
+    try:
+        import pytesseract  # noqa: F401
+        from PIL import Image  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+_GRAB_PREVIEW_JS = """async () => {
+  // Largest rendered image or canvas on the doc detail page = the deed preview.
+  const imgs = [...document.querySelectorAll('img')]
+    .filter(i => i.naturalWidth > 400 && i.naturalHeight > 400)
+    .sort((a, b) => b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight);
+  const cvs = [...document.querySelectorAll('canvas')]
+    .filter(c => c.width > 400 && c.height > 400)
+    .sort((a, b) => b.width * b.height - a.width * a.height);
+  try {
+    if (cvs.length) return cvs[0].toDataURL('image/png');
+  } catch (e) { /* tainted canvas -> fall through to img */ }
+  if (imgs.length) {
+    try {
+      const resp = await fetch(imgs[0].src);
+      const blob = await resp.blob();
+      return await new Promise(res => { const fr = new FileReader();
+        fr.onload = () => res(fr.result); fr.readAsDataURL(blob); });
+    } catch (e) { return null; }
+  }
+  return null;
+}"""
+
+
+def _ocr_deed_text(data_url: str) -> str:
+    import base64
+    import io
+    import pytesseract
+    from PIL import Image
+    raw = base64.b64decode(data_url.split(",", 1)[1])
+    img = Image.open(io.BytesIO(raw)).convert("L")
+    if img.width < 1400:  # upscale for OCR accuracy on small previews
+        img = img.resize((img.width * 2, img.height * 2))
+    return pytesseract.image_to_string(img)
+
+
+def _money_str(m: re.Match | None) -> str:
+    return m.group(1).replace(",", "") if m else ""
+
+
+def enrich_detail(browser, rows: list[dict]) -> dict:
+    """Per deed: read detail-page text, and OCR the deed preview image for the figures the
+    deed itself states (winning bid, original principal, mortgagors, sale date).
+    Fields stay blank when not found — blank means UNKNOWN downstream, never $0."""
+    ocr_ok = _ocr_available()
+    stats = {"visited": 0, "ocr_ran": 0, "got_price": 0, "got_principal": 0, "got_mortgagor": 0}
+    if not ocr_ok:
+        log.warning("pytesseract/Pillow not installed — detail text only, no deed OCR")
+    ctx = browser.new_context(user_agent=UA, viewport={"width": 1280, "height": 1000})
     try:
         page = ctx.new_page()
         for r in rows[:MAX_DETAIL_VISITS]:
@@ -248,20 +316,48 @@ def enrich_detail(browser, rows: list[dict]) -> None:
                 continue
             try:
                 page.goto(r["clerk_url"], wait_until="networkidle", timeout=30000)
-                time.sleep(0.5)
+                time.sleep(1.2)
                 body = page.evaluate("() => (document.body && document.body.innerText) || ''")
             except Exception as exc:
                 log.warning("  detail failed %s: %s", r["instrument_number"], exc)
                 continue
+            stats["visited"] += 1
             m = CONSIDERATION_RE.search(body)
             if m:
                 r["consideration"] = m.group(1).replace(",", "")
+
+            if ocr_ok and not (r.get("consideration") and r.get("original_principal")):
+                try:
+                    data_url = page.evaluate(_GRAB_PREVIEW_JS)
+                except Exception:
+                    data_url = None
+                if data_url:
+                    try:
+                        text = _ocr_deed_text(data_url)
+                        stats["ocr_ran"] += 1
+                        if not r.get("consideration"):
+                            r["consideration"] = _money_str(OCR_BID_RE.search(text))
+                        r["original_principal"] = _money_str(OCR_PRINCIPAL_RE.search(text))
+                        mm = OCR_MORTGAGOR_RE.search(text)
+                        if mm:
+                            r["mortgagors"] = re.sub(r"\s+", " ", mm.group(1)).strip()
+                        sd = OCR_SALEDATE_RE.search(text)
+                        if sd and not r.get("sale_date"):
+                            r["sale_date"] = normalize_date(sd.group(1).replace(",", " ").strip())
+                        r["ocr_used"] = "1"
+                    except Exception as exc:
+                        log.warning("  OCR failed %s: %s", r["instrument_number"], exc)
+            stats["got_price"] += bool(r.get("consideration"))
+            stats["got_principal"] += bool(r.get("original_principal"))
+            stats["got_mortgagor"] += bool(r.get("mortgagors"))
             time.sleep(0.6)
     finally:
         try:
             ctx.close()
         except Exception:
             pass
+    log.info("detail enrichment: %s", stats)
+    return stats
 
 
 def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tuple[list[dict], dict]:
@@ -278,16 +374,13 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
         for code, rows in confirmed.items():
             for r in rows:
                 if DEED_RE.search(r["doc_type"]) and not APPT_RE.search(r["doc_type"]):
-                    r.setdefault("sale_date", "")
-                    r.setdefault("beneficiary", "")
-                    r.setdefault("consideration", "")
-                    r.setdefault("property_address", "")
-                    r.setdefault("parcel_id", "")
+                    for k in ("sale_date", "beneficiary", "consideration", "original_principal",
+                              "mortgagors", "property_address", "parcel_id", "ocr_used"):
+                        r.setdefault(k, "")
                     r["county"] = county
                     all_rows[r["instrument_number"]] = r
         rows = sorted(all_rows.values(), key=lambda r: r["recording_date"], reverse=True)
-        if rows:
-            enrich_detail(browser, rows)
+        enrich_stats = enrich_detail(browser, rows) if rows else {}
         browser.close()
 
     per_county = DATA / f"trustee_deeds_{county}.csv"
@@ -299,6 +392,9 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
         "confirmed_codes": sorted(confirmed),
         "deeds": len(rows),
         "with_consideration": sum(1 for r in rows if r.get("consideration")),
+        "with_principal": sum(1 for r in rows if r.get("original_principal")),
+        "with_mortgagor": sum(1 for r in rows if r.get("mortgagors")),
+        "enrichment": enrich_stats,
         "warning": None if confirmed else (
             f"{county}: NO trustee-deed doc code confirmed — set TRUSTEE_DEED_CODES "
             "after checking that portal's document-type filter manually."),
