@@ -35,8 +35,16 @@ from datetime import datetime, timedelta
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import fetch  # noqa: E402  (main-guarded; safe to import)
 from fetch import (  # noqa: E402
-    CLERK_BASE_URL, CLERK_RESULTS, PAGE_SIZE, log, normalize_date,
+    PAGE_SIZE, log, normalize_date,
 )
+
+# GovOS counties share this scraper; each is probed for its own doc codes.
+GOVOS_COUNTIES = {
+    "dallas": "https://dallas.tx.publicsearch.us",
+    "bexar": "https://bexar.tx.publicsearch.us",
+}
+CLERK_BASE_URL = GOVOS_COUNTIES["dallas"]   # per-run override in main()
+CLERK_RESULTS = f"{CLERK_BASE_URL}/results"
 from playwright.sync_api import sync_playwright  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 from urllib.parse import urlencode  # noqa: E402
@@ -226,11 +234,12 @@ def enrich_detail(browser, rows: list[dict]) -> None:
             pass
 
 
-def main() -> None:
-    DATA.mkdir(exist_ok=True)
-    end = datetime.utcnow() - timedelta(days=CERT_LAG_DAYS)
-    start = end - timedelta(days=LOOKBACK_DAYS)
-    log.info("trustee deeds window %s .. %s", start.date(), end.date())
+def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tuple[list[dict], dict]:
+    """Point the module at one GovOS county and pull its deeds."""
+    global CLERK_BASE_URL, CLERK_RESULTS, CODE_CACHE
+    CLERK_BASE_URL = base_url
+    CLERK_RESULTS = f"{base_url}/results"
+    CODE_CACHE = DATA / f"doc_code_cache_{county}.json"
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
@@ -244,30 +253,69 @@ def main() -> None:
                     r.setdefault("consideration", "")
                     r.setdefault("property_address", "")
                     r.setdefault("parcel_id", "")
+                    r["county"] = county
                     all_rows[r["instrument_number"]] = r
         rows = sorted(all_rows.values(), key=lambda r: r["recording_date"], reverse=True)
         if rows:
             enrich_detail(browser, rows)
         browser.close()
 
-    with OUT_CSV.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
+    per_county = DATA / f"trustee_deeds_{county}.csv"
+    with per_county.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS + ["county"], extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
-
-    summary = {
-        "generated_at": datetime.utcnow().isoformat(),
-        "window": [start.date().isoformat(), end.date().isoformat()],
+    stats = {
         "confirmed_codes": sorted(confirmed),
         "deeds": len(rows),
         "with_consideration": sum(1 for r in rows if r.get("consideration")),
         "warning": None if confirmed else (
-            "NO trustee-deed doc code confirmed — set TRUSTEE_DEED_CODES env var "
-            "after checking the portal's document-type filter manually."),
+            f"{county}: NO trustee-deed doc code confirmed — set TRUSTEE_DEED_CODES "
+            "after checking that portal's document-type filter manually."),
+    }
+    return rows, stats
+
+
+def main() -> None:
+    DATA.mkdir(exist_ok=True)
+    end = datetime.utcnow() - timedelta(days=CERT_LAG_DAYS)
+    start = end - timedelta(days=LOOKBACK_DAYS)
+    log.info("trustee deeds window %s .. %s", start.date(), end.date())
+
+    wanted = [c.strip().lower() for c in os.environ.get(
+        "DEED_COUNTIES", ",".join(GOVOS_COUNTIES)).split(",") if c.strip()]
+    combined: list[dict] = []
+    per_county_stats: dict[str, dict] = {}
+    for county in wanted:
+        base = GOVOS_COUNTIES.get(county)
+        if not base:
+            log.warning("county %s is not a configured GovOS county — skipping", county)
+            continue
+        log.info("=== %s county ===", county)
+        try:
+            rows, stats = run_county(county, base, start, end)
+        except Exception as exc:  # one county failing must not kill the others
+            log.error("%s county failed: %s", county, exc)
+            rows, stats = [], {"error": str(exc), "deeds": 0, "with_consideration": 0,
+                               "confirmed_codes": []}
+        combined.extend(rows)
+        per_county_stats[county] = stats
+
+    with OUT_CSV.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS + ["county"], extrasaction="ignore")
+        w.writeheader()
+        w.writerows(combined)
+
+    summary = {
+        "generated_at": datetime.utcnow().isoformat(),
+        "window": [start.date().isoformat(), end.date().isoformat()],
+        "counties": per_county_stats,
+        "deeds": len(combined),
+        "with_consideration": sum(1 for r in combined if r.get("consideration")),
     }
     SUMMARY.write_text(json.dumps(summary, indent=1))
-    log.info("trustee_deeds.csv: %d deeds (%d with consideration); codes=%s",
-             summary["deeds"], summary["with_consideration"], summary["confirmed_codes"])
+    log.info("trustee_deeds.csv: %d deeds (%d with consideration) across %s",
+             summary["deeds"], summary["with_consideration"], list(per_county_stats))
 
 
 if __name__ == "__main__":
