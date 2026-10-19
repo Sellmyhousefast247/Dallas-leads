@@ -71,11 +71,17 @@ CANDIDATE_CODES = [c.strip() for c in os.environ.get(
 # has NO "TRUSTEE ... DEED" type; foreclosure deeds there record under FC = "FORECLOSURE".
 COUNTY_CANDIDATES = {
     "dallas": ["TD", "TR DEED"],
-    "bexar": ["FC", "TD", "TR DEED"],
+    "bexar": [],             # no dedicated deed code — party-search mode below
     "tarrant": [],           # rely on homepage doc-table discovery
 }
+# Counties whose foreclosure deeds hide inside the generic DEED type: search by the
+# substitute trustee party name instead of a doc code (verified on bexar 2026-10-19 —
+# advancedSearch+DEED works; no TRUSTEE-named doc type exists in its 327-code table).
+COUNTY_PARTY_SEARCH = {
+    "bexar": {"searchValue": "SUBSTITUTE TRUSTEE", "deed_types": {"DEED"}},
+}
 COUNTY_DEED_DESC = {
-    "bexar": re.compile(r"^FORECLOSURE\b|TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE),
+    "bexar": re.compile(r"^DEED$|^FORECLOSURE\b|TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE),
 }
 
 DEED_RE = re.compile(r"TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE)
@@ -190,6 +196,17 @@ def _column_map(table) -> dict:
     for k, v in defaults.items():
         cols.setdefault(k, v)
     return cols
+
+
+def build_party_url(search_value: str, start: datetime, end: datetime, offset: int = 0) -> str:
+    params = {
+        "department": "RP", "searchType": "quickSearch",
+        "searchValue": search_value,
+        "keywordSearch": "false", "searchOcrText": "false",
+        "recordedDateRange": f"{start.strftime('%Y%m%d')},{end.strftime('%Y%m%d')}",
+        "limit": PAGE_SIZE, "offset": offset,
+    }
+    return f"{CLERK_RESULTS}?{urlencode(params)}"
 
 
 def parse_rows(html: str) -> list[dict]:
@@ -408,7 +425,8 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
 
         def _on_response(resp):
             # Deed page images stream as signed PNGs: /files/documents/<id>/images/<page>_1.png
-            if re.search(r"/files/documents/\d+/images/[^/]+\.(png|jpe?g)", resp.url) and resp.ok:
+            if (re.search(r"/files/documents/\d+/images/[^/]+\.(png|jpe?g)", resp.url)
+                    and "_r-" not in resp.url and resp.ok):  # skip low-res multiview thumbs
                 try:
                     if len(captured) < 3:
                         captured.append(resp.body())
@@ -426,11 +444,12 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
             try:
                 page.goto(r["clerk_url"], wait_until="networkidle", timeout=30000)
                 time.sleep(1.2)
-                # advance the viewer to pull pages 2-3 (bid/principal often sit past the cover page)
+                # advance the viewer to pull pages 2-3 full-res (bid/principal often sit
+                # past the cover page) — the viewer pages via its aria-labeled button
                 for _ in range(2):
                     try:
-                        page.keyboard.press("ArrowRight")
-                        time.sleep(1.0)
+                        page.click('[aria-label="Go To Next Page"]', timeout=4000)
+                        time.sleep(1.3)
                     except Exception:
                         break
                 body = page.evaluate("() => (document.body && document.body.innerText) || ''")
@@ -764,7 +783,18 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
-        confirmed = discover_codes(browser, start, end)
+        party = COUNTY_PARTY_SEARCH.get(county)
+        if party:
+            # party-name search instead of doc-code probing
+            raw = fresh_search(
+                browser,
+                lambda off: build_party_url(party["searchValue"], start, end, off),
+                f"party {party['searchValue']}")
+            keep = [r for r in raw if r["doc_type"].strip().upper() in party["deed_types"]]
+            log.info("party search: %d rows, %d deed rows", len(raw), len(keep))
+            confirmed = {f"party:{party['searchValue']}": keep} if keep else {}
+        else:
+            confirmed = discover_codes(browser, start, end)
         all_rows: dict[str, dict] = {}
         for code, rows in confirmed.items():
             for r in rows:
