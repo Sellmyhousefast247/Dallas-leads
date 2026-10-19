@@ -52,7 +52,10 @@ CERT_LAG_DAYS = 3
 MAX_PAGES = 10                      # 500 rows/code is plenty for a month of deeds
 MAX_DETAIL_VISITS = int(os.environ.get("DEED_DETAIL_CAP", "80"))
 CANDIDATE_CODES = [c.strip() for c in os.environ.get(
-    "TRUSTEE_DEED_CODES", "STD,TD,TRD,SWD,DT"  # probed, never trusted blindly
+    "TRUSTEE_DEED_CODES",
+    # TD confirmed from the portal's own doc-type table (2026-10-18):
+    #   TD = "TRUSTEE'S/SUBSTITUTE TRUSTEE'S DEED", TR DEED = "TRUSTEE DEED"
+    "TD,TR DEED"
 ).split(",") if c.strip()]
 
 DEED_RE = re.compile(r"TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE)
