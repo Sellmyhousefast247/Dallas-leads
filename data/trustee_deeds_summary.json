@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-19T14:03:38.916366",
+ "generated_at": "2026-10-19T14:39:09.499459",
  "window": [
   "2026-09-11",
   "2026-10-16"
@@ -10,39 +10,56 @@
     "TD"
    ],
    "deeds": 50,
-   "with_consideration": 24,
-   "with_principal": 6,
+   "with_consideration": 29,
+   "with_principal": 7,
    "with_mortgagor": 31,
-   "with_owner": 36,
-   "with_address": 36,
+   "with_owner": 39,
+   "with_address": 40,
    "enrichment": {
     "visited": 50,
     "ocr_ran": 50,
-    "got_price": 24,
-    "got_principal": 6,
+    "got_price": 29,
+    "got_principal": 7,
     "got_mortgagor": 31
    },
    "parcels": {
     "api_missing": [],
     "owner_hits": 1,
     "legal_hits": 0,
-    "unmatched": 14,
-    "bulk_hits": 35,
+    "unmatched": 11,
+    "bulk_hits": 38,
     "bulk_rows": 862110
    },
    "warning": null
   },
   "bexar": {
-   "confirmed_codes": [],
-   "deeds": 0,
-   "with_consideration": 0,
-   "with_principal": 0,
-   "with_mortgagor": 0,
+   "confirmed_codes": [
+    "party:SUBSTITUTE TRUSTEE"
+   ],
+   "deeds": 6,
+   "with_consideration": 5,
+   "with_principal": 4,
+   "with_mortgagor": 6,
    "with_owner": 0,
-   "with_address": 0,
-   "enrichment": {},
-   "parcels": {},
-   "warning": "bexar: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
+   "with_address": 6,
+   "enrichment": {
+    "visited": 6,
+    "ocr_ran": 6,
+    "got_price": 5,
+    "got_principal": 4,
+    "got_mortgagor": 6
+   },
+   "parcels": {
+    "api_missing": [
+     "bexar"
+    ],
+    "owner_hits": 0,
+    "legal_hits": 0,
+    "unmatched": 0,
+    "bulk_hits": 0,
+    "bulk_rows": 862110
+   },
+   "warning": null
   },
   "tarrant": {
    "confirmed_codes": [],
@@ -57,6 +74,6 @@
    "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
   }
  },
- "deeds": 50,
- "with_consideration": 24
+ "deeds": 56,
+ "with_consideration": 34
 }
