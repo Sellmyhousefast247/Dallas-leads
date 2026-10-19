@@ -42,6 +42,7 @@ from fetch import (  # noqa: E402
 GOVOS_COUNTIES = {
     "dallas": "https://dallas.tx.publicsearch.us",
     "bexar": "https://bexar.tx.publicsearch.us",
+    "tarrant": "https://tarrant.tx.publicsearch.us",
 }
 CLERK_BASE_URL = GOVOS_COUNTIES["dallas"]   # per-run override in main()
 CLERK_RESULTS = f"{CLERK_BASE_URL}/results"
