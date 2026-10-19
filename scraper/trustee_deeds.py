@@ -183,6 +183,34 @@ def confirm_code(rows: list[dict]) -> bool:
     return hits > 0 and (hits / len(rows)) > 0.6  # strict majority must be actual trustee deeds
 
 
+DOC_TABLE_RE = re.compile(r'\{"code":"([^"]{1,12})","description":"([^"]*)"\}')
+
+
+def codes_from_homepage(browser) -> list[str]:
+    """Each GovOS county embeds its own doc-type table in the homepage HTML.
+    Pull codes whose description reads TRUSTEE...DEED (not APPOINTMENT)."""
+    ctx = browser.new_context(user_agent=UA)
+    found: list[str] = []
+    try:
+        page = ctx.new_page()
+        page.goto(CLERK_BASE_URL, wait_until="domcontentloaded", timeout=30000)
+        html = page.content()
+        for code, desc in DOC_TABLE_RE.findall(html):
+            d = desc.replace("\\u002F", "/").replace("\\/", "/")
+            if DEED_RE.search(d) and not APPT_RE.search(d):
+                found.append(code)
+    except Exception as exc:
+        log.warning("homepage doc-table read failed: %s", exc)
+    finally:
+        try:
+            ctx.close()
+        except Exception:
+            pass
+    if found:
+        log.info("doc-table trustee-deed codes: %s", found)
+    return found
+
+
 def discover_codes(browser, start, end) -> dict[str, list[dict]]:
     cached: list[str] = []
     if CODE_CACHE.exists():
@@ -190,8 +218,9 @@ def discover_codes(browser, start, end) -> dict[str, list[dict]]:
             cached = json.loads(CODE_CACHE.read_text()).get("trustee_deed_codes", [])
         except Exception:
             cached = []
+    table_codes = codes_from_homepage(browser)   # county's own table, highest signal
     confirmed: dict[str, list[dict]] = {}
-    for code in list(dict.fromkeys(cached + CANDIDATE_CODES)):
+    for code in list(dict.fromkeys(cached + table_codes + CANDIDATE_CODES)):
         rows = fresh_search(browser, lambda off, c=code: build_url(c, start, end, off),
                             f"probe {code}", max_pages=1 if code not in cached else MAX_PAGES)
         if confirm_code(rows):
