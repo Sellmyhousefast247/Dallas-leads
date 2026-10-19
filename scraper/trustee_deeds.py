@@ -104,6 +104,9 @@ OCR_MORTGAGOR_RE = re.compile(
     r"([A-Z][A-Za-z.'\-]*(?:[ \t]+[A-Z][A-Za-z.'\-]*){0,4}"
     r"(?:[ \t]+(?:AND|and|&)[ \t]+[A-Z][A-Za-z.'\-]*(?:[ \t]+[A-Z][A-Za-z.'\-]*){0,3})?)")
 OCR_BUYER_RE = re.compile(r"Buyer\s*[:\-]\s*([A-Z][A-Za-z0-9 .,&'\-]{3,60})")
+OCR_LENDER_RE = re.compile(
+    r"(?:Lender|Beneficiary|payable\s+to(?:\s+the\s+order\s+of)?|Mortgagee|Noteholder|Current\s+Mortgagee)"
+    r"\s*[:\-]?\s*([A-Z][A-Z0-9 .,&'\-]{4,60}?)(?:\s*[,;\n]|$)", re.IGNORECASE)
 OCR_SALE_AMOUNT_RE = re.compile(r"Amount\s+of\s+Sale\s*[:\-]?\s*\$\s*([\d,]{4,}(?:\.\d{2})?)", re.IGNORECASE)
 OCR_TX_ADDR_RE = re.compile(
     r"(\d{1,6}[A-Za-z]?\s+[A-Z][^,\n]{2,40},\s*[A-Za-z .]{3,25},\s*T(?:X|EXAS|exas)\.?,?\s*\d{5})")
@@ -496,6 +499,9 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                         mm = OCR_MORTGAGOR_RE.search(text)
                         if mm:
                             r["mortgagors"] = re.sub(r"\s+", " ", mm.group(1)).strip()
+                        lb = OCR_LENDER_RE.search(text)
+                        if lb and not r.get("beneficiary"):
+                            r["beneficiary"] = re.sub(r"\s+", " ", lb.group(1)).strip(" .,")
                         sd = OCR_SALEDATE_RE.search(text)
                         if sd and not r.get("sale_date"):
                             r["sale_date"] = normalize_date(sd.group(1).replace(",", " ").strip())

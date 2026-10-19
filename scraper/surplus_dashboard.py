@@ -84,7 +84,10 @@ def build_leads() -> list:
                         lien_hits.append({"type": ln.get("cat_label"), "doc": ln.get("doc_num"),
                                           "filed": ln.get("filed"), "url": ln.get("clerk_url")})
 
-            if buyer and FINANCIAL_RE.search(buyer):
+            beneficiary = (row.get("beneficiary") or "").strip()
+            if buyer and beneficiary and _overlap(buyer, beneficiary) >= 0.5:
+                status, why = "LENDER_BUYBACK", "buyer matches the deed's own lender/beneficiary — credit-bid buyback"
+            elif buyer and FINANCIAL_RE.search(buyer):
                 status, why = "LENDER_BUYBACK", "financial-institution grantee — no surplus play"
             elif price is None:
                 status, why = "NEEDS_PRICE", "winning bid not extracted — open deed PDF"
