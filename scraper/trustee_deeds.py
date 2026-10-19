@@ -90,11 +90,18 @@ OCR_BID_RE = re.compile(
     re.IGNORECASE)
 OCR_BID_FALLBACK_RE = re.compile(r"\$\s*([\d,]{5,}(?:\.\d{2})?)")
 OCR_PRINCIPAL_RE = re.compile(
-    r"original\s+principal\s+(?:amount|sum|balance)?[^$]{0,60}\$\s*([\d,]{4,}(?:\.\d{2})?)",
+    r"(?:original\s+)?principal\s+(?:amount|sum|balance)\s*(?:of)?[^$\n]{0,40}\$\s*([\d,]{4,}(?:\.\d{2})?)"
+    r"|original\s+sum\s+of[^$\n]{0,40}\$\s*([\d,]{4,}(?:\.\d{2})?)",
     re.IGNORECASE)
 OCR_MORTGAGOR_RE = re.compile(
-    r"(?:Mortgagors?|Grantors?\s*\(Mortgagors?\)|executed\s+by)\s*[:\-]?\s*"
-    r"([A-Z][A-Za-z.'\-]*(?:\s+[A-Z][A-Za-z.'\-]*){0,4}(?:\s+(?:AND|and|&)\s+[A-Z][A-Za-z.'\-]*(?:\s+[A-Z][A-Za-z.'\-]*){0,3})?)")
+    r"(?:Mortgagors?|Borrowers?|Grantor\(s\)|Grantors?|executed\s+by)\s*[:\-]\s*"
+    r"([A-Z][A-Za-z.'\-]*(?:[ \t]+[A-Z][A-Za-z.'\-]*){0,4}"
+    r"(?:[ \t]+(?:AND|and|&)[ \t]+[A-Z][A-Za-z.'\-]*(?:[ \t]+[A-Z][A-Za-z.'\-]*){0,3})?)")
+OCR_BUYER_RE = re.compile(r"Buyer\s*[:\-]\s*([A-Z][A-Za-z0-9 .,&'\-]{3,60})")
+OCR_SALE_AMOUNT_RE = re.compile(r"Amount\s+of\s+Sale\s*[:\-]?\s*\$\s*([\d,]{4,}(?:\.\d{2})?)", re.IGNORECASE)
+OCR_TX_ADDR_RE = re.compile(
+    r"(\d{1,6}[A-Za-z]?\s+[A-Z][^,\n]{2,40},\s*[A-Za-z .]{3,25},\s*T(?:X|EXAS|exas)\.?,?\s*\d{5})")
+OCR_APN_RE = re.compile(r"APN\s*[:#]?\s*([\d\- ]{6,25}\d)")
 OCR_SALEDATE_RE = re.compile(
     r"(?:date\s+of\s+sale|sale\s+(?:was\s+)?(?:held|conducted)\s+on|sold\s+on)\s*[:\-]?\s*"
     r"([A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|\d{1,2}/\d{1,2}/\d{4})", re.IGNORECASE)
@@ -453,6 +460,8 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                             samples_saved += 1
                         stats["ocr_ran"] += 1
                         if not r.get("consideration"):
+                            r["consideration"] = _money_str(OCR_SALE_AMOUNT_RE.search(text))
+                        if not r.get("consideration"):
                             r["consideration"] = _money_str(OCR_BID_RE.search(text))
                         if not r.get("consideration"):
                             # fallback: the largest dollar figure on the deed that is not
@@ -462,13 +471,21 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                             amts = [a for a in amts if a != principal and float(a) >= 10000]
                             if amts:
                                 r["consideration"] = max(amts, key=float)
-                        r["original_principal"] = _money_str(OCR_PRINCIPAL_RE.search(text))
+                        pm = OCR_PRINCIPAL_RE.search(text)
+                        if pm:
+                            r["original_principal"] = (pm.group(1) or pm.group(2) or "").replace(",", "")
                         mm = OCR_MORTGAGOR_RE.search(text)
                         if mm:
                             r["mortgagors"] = re.sub(r"\s+", " ", mm.group(1)).strip()
                         sd = OCR_SALEDATE_RE.search(text)
                         if sd and not r.get("sale_date"):
                             r["sale_date"] = normalize_date(sd.group(1).replace(",", " ").strip())
+                        apn = OCR_APN_RE.search(text)
+                        if apn and not r.get("parcel_id"):
+                            r["parcel_id"] = re.sub(r"\s+", " ", apn.group(1)).strip()
+                        txa = OCR_TX_ADDR_RE.search(text)
+                        if txa and not r.get("property_address"):
+                            r["property_address"] = re.sub(r"\s+", " ", txa.group(1)).strip()
                         ad = OCR_ADDRESS_RE.search(text)
                         if ad and not r.get("property_address"):
                             addr = re.split(r"\s+(?:together|being|and\s+all)\b",
