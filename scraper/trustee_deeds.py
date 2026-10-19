@@ -67,6 +67,17 @@ CANDIDATE_CODES = [c.strip() for c in os.environ.get(
     "TD,TR DEED"
 ).split(",") if c.strip()]
 
+# Per-county candidates and deed-description tests. Bexar's doc table (checked 2026-10-18)
+# has NO "TRUSTEE ... DEED" type; foreclosure deeds there record under FC = "FORECLOSURE".
+COUNTY_CANDIDATES = {
+    "dallas": ["TD", "TR DEED"],
+    "bexar": ["FC", "TD", "TR DEED"],
+    "tarrant": [],           # rely on homepage doc-table discovery
+}
+COUNTY_DEED_DESC = {
+    "bexar": re.compile(r"^FORECLOSURE\b|TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE),
+}
+
 DEED_RE = re.compile(r"TRUSTEE.{0,12}DEED|DEED.{0,12}TRUSTEE", re.IGNORECASE)
 APPT_RE = re.compile(r"APPOINT", re.IGNORECASE)
 CONSIDERATION_RE = re.compile(
@@ -122,14 +133,22 @@ READY_JS = _SC._READY_JS
 UA = _SC._UA
 
 
+COUNTY_URL_STYLE = {"bexar": "advanced"}   # bexar portal honors advancedSearch&docTypes=
+
+
 def build_url(doc_code: str, start: datetime, end: datetime, offset: int = 0) -> str:
     params = {
-        "department": "RP", "searchType": "quickSearch",
+        "department": "RP",
         "keywordSearch": "false", "searchOcrText": "false",
-        "_docTypes": doc_code,
         "recordedDateRange": f"{start.strftime('%Y%m%d')},{end.strftime('%Y%m%d')}",
         "limit": PAGE_SIZE, "offset": offset,
     }
+    if COUNTY_URL_STYLE.get(CURRENT_COUNTY) == "advanced":
+        params["searchType"] = "advancedSearch"
+        params["docTypes"] = doc_code
+    else:
+        params["searchType"] = "quickSearch"
+        params["_docTypes"] = doc_code
     return f"{CLERK_RESULTS}?{urlencode(params)}"
 
 
@@ -210,12 +229,23 @@ def fresh_search(browser, url_builder, label: str, max_pages: int = MAX_PAGES) -
     return rows
 
 
+CURRENT_COUNTY = "dallas"
+
+
+def _deed_desc_re():
+    return COUNTY_DEED_DESC.get(CURRENT_COUNTY, DEED_RE)
+
+
+def _is_deed(doc_type: str) -> bool:
+    return bool(_deed_desc_re().search(doc_type or "")) and not APPT_RE.search(doc_type or "")
+
+
 def confirm_code(rows: list[dict]) -> bool:
-    """A candidate code counts only if its rows really are trustee DEEDS."""
+    """A candidate code counts only if its rows really are foreclosure-sale DEEDS."""
     if not rows:
         return False
-    hits = sum(1 for r in rows if DEED_RE.search(r["doc_type"]) and not APPT_RE.search(r["doc_type"]))
-    return hits > 0 and (hits / len(rows)) > 0.6  # strict majority must be actual trustee deeds
+    hits = sum(1 for r in rows if _is_deed(r["doc_type"]))
+    return hits > 0 and (hits / len(rows)) > 0.6  # strict majority must be actual deeds
 
 
 DOC_TABLE_RE = re.compile(r'\{"code":"([^"]{1,12})","description":"([^"]*)"\}')
@@ -232,7 +262,7 @@ def codes_from_homepage(browser) -> list[str]:
         html = page.content()
         for code, desc in DOC_TABLE_RE.findall(html):
             d = desc.replace("\\u002F", "/").replace("\\/", "/")
-            if DEED_RE.search(d) and not APPT_RE.search(d):
+            if _is_deed(d) or (COUNTY_DEED_DESC.get(CURRENT_COUNTY) and COUNTY_DEED_DESC[CURRENT_COUNTY].search(d)):
                 found.append(code)
     except Exception as exc:
         log.warning("homepage doc-table read failed: %s", exc)
@@ -255,7 +285,8 @@ def discover_codes(browser, start, end) -> dict[str, list[dict]]:
             cached = []
     table_codes = codes_from_homepage(browser)   # county's own table, highest signal
     confirmed: dict[str, list[dict]] = {}
-    for code in list(dict.fromkeys(cached + table_codes + CANDIDATE_CODES)):
+    county_cands = COUNTY_CANDIDATES.get(CURRENT_COUNTY, [])
+    for code in list(dict.fromkeys(cached + table_codes + county_cands + CANDIDATE_CODES)):
         rows = fresh_search(browser, lambda off, c=code: build_url(c, start, end, off),
                             f"probe {code}", max_pages=1 if code not in cached else MAX_PAGES)
         if confirm_code(rows):
@@ -332,9 +363,21 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
     ctx = browser.new_context(user_agent=UA, viewport={"width": 1280, "height": 1000})
     try:
         page = ctx.new_page()
+        captured: dict = {}
+
+        def _on_response(resp):
+            # Deed page images stream as signed PNGs: /files/documents/<id>/images/<page>_1.png
+            if re.search(r"/files/documents/\d+/images/[^/]+\.(png|jpe?g)", resp.url) and resp.ok:
+                try:
+                    captured.setdefault("img", resp.body())
+                except Exception:
+                    pass
+
+        page.on("response", _on_response)
         for r in rows[:MAX_DETAIL_VISITS]:
             if not r["clerk_url"]:
                 continue
+            captured.clear()
             try:
                 page.goto(r["clerk_url"], wait_until="networkidle", timeout=30000)
                 time.sleep(1.2)
@@ -348,10 +391,15 @@ def enrich_detail(browser, rows: list[dict]) -> dict:
                 r["consideration"] = m.group(1).replace(",", "")
 
             if ocr_ok and not (r.get("consideration") and r.get("original_principal")):
-                try:
-                    data_url = page.evaluate(_GRAB_PREVIEW_JS)
-                except Exception:
-                    data_url = None
+                data_url = None
+                if captured.get("img"):
+                    import base64 as _b64
+                    data_url = "data:image/png;base64," + _b64.b64encode(captured["img"]).decode()
+                if not data_url:
+                    try:
+                        data_url = page.evaluate(_GRAB_PREVIEW_JS)
+                    except Exception:
+                        data_url = None
                 if data_url:
                     try:
                         text = _ocr_deed_text(data_url)
@@ -497,7 +545,8 @@ def enrich_parcels(rows: list) -> dict:
 
 def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tuple[list[dict], dict]:
     """Point the module at one GovOS county and pull its deeds."""
-    global CLERK_BASE_URL, CLERK_RESULTS, CODE_CACHE
+    global CLERK_BASE_URL, CLERK_RESULTS, CODE_CACHE, CURRENT_COUNTY
+    CURRENT_COUNTY = county
     CLERK_BASE_URL = base_url
     CLERK_RESULTS = f"{base_url}/results"
     CODE_CACHE = DATA / f"doc_code_cache_{county}.json"
@@ -508,7 +557,7 @@ def run_county(county: str, base_url: str, start: datetime, end: datetime) -> tu
         all_rows: dict[str, dict] = {}
         for code, rows in confirmed.items():
             for r in rows:
-                if DEED_RE.search(r["doc_type"]) and not APPT_RE.search(r["doc_type"]):
+                if _is_deed(r["doc_type"]):
                     for k in ("sale_date", "beneficiary", "consideration", "original_principal",
                               "mortgagors", "owner_full", "property_address", "mail_address",
                               "assessed_value", "parcel_source", "parcel_id", "ocr_used"):
