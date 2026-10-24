@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T13:48:16.001179+00:00",
+ "generated_at": "2026-10-24T13:46:13.074075+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -156,16 +156,16 @@
      "url": "https://dallas.tx.publicsearch.us/doc/331607067"
     },
     {
-     "type": "Judgment",
-     "doc": "202600220901",
-     "filed": "2026-10-14",
-     "url": "https://dallas.tx.publicsearch.us/doc/331607093"
-    },
-    {
      "type": "State Tax Lien",
      "doc": "202600223147",
      "filed": "2026-10-16",
      "url": "https://dallas.tx.publicsearch.us/doc/331653015"
+    },
+    {
+     "type": "Judgment",
+     "doc": "202600220901",
+     "filed": "2026-10-14",
+     "url": "https://dallas.tx.publicsearch.us/doc/331607093"
     }
    ],
    "status": "NEEDS_DEBT",
@@ -342,6 +342,25 @@
    "status": "NEEDS_PRICE",
    "why": "winning bid not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331706035"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600225271",
+   "recorded": "2026-10-20",
+   "sale_date": "",
+   "property": "622 OAK CREEK DR, Cedar Hill, TX 751046235",
+   "owner": "BUFFORD KIMBERLY",
+   "owner_source": "appraisal district",
+   "mail_address": "622 OAK CREEK DR, CEDAR HILL, TEXAS 751046235",
+   "assessed_value": 0.0,
+   "buyer": "ELEGANT INVESTMENT GROUP INC",
+   "sale_price": null,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_PRICE",
+   "why": "winning bid not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331708876"
   },
   {
    "county": "Dallas",
@@ -542,25 +561,6 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600225271",
-   "recorded": "2026-10-20",
-   "sale_date": "",
-   "property": "622 OAK CREEK DR, Cedar Hill, TX 751046235",
-   "owner": "BUFFORD KIMBERLY",
-   "owner_source": "appraisal district",
-   "mail_address": "622 OAK CREEK DR, CEDAR HILL, TEXAS 751046235",
-   "assessed_value": 0.0,
-   "buyer": "ELEGANT INVESTMENT GROUP INC",
-   "sale_price": 256300.0,
-   "original_principal": 256300.0,
-   "provisional_spread": 0.0,
-   "lien_hits": [],
-   "status": "NO_SPREAD",
-   "why": "bid at or under original principal \u2014 payoff spread unlikely",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/331708876"
-  },
-  {
-   "county": "Dallas",
    "instrument": "202600221267",
    "recorded": "2026-10-15",
    "sale_date": "",
@@ -575,16 +575,16 @@
    "provisional_spread": 0.0,
    "lien_hits": [
     {
-     "type": "Federal Tax Lien",
-     "doc": "202600223981",
-     "filed": "2026-10-19",
-     "url": "https://dallas.tx.publicsearch.us/doc/331691094"
-    },
-    {
      "type": "State Tax Lien",
      "doc": "202600223128",
      "filed": "2026-10-16",
      "url": "https://dallas.tx.publicsearch.us/doc/331653029"
+    },
+    {
+     "type": "Federal Tax Lien",
+     "doc": "202600223981",
+     "filed": "2026-10-19",
+     "url": "https://dallas.tx.publicsearch.us/doc/331691094"
     }
    ],
    "status": "NO_SPREAD",
