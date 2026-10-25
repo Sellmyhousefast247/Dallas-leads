@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-10-24T13:46:12.894492",
+ "generated_at": "2026-10-25T13:42:37.635589",
  "window": [
-  "2026-09-16",
-  "2026-10-21"
+  "2026-09-17",
+  "2026-10-22"
  ],
  "counties": {
   "dallas": {
@@ -10,16 +10,16 @@
     "TD"
    ],
    "deeds": 50,
-   "with_consideration": 31,
-   "with_principal": 8,
+   "with_consideration": 32,
+   "with_principal": 9,
    "with_mortgagor": 31,
    "with_owner": 42,
    "with_address": 42,
    "enrichment": {
     "visited": 50,
     "ocr_ran": 50,
-    "got_price": 31,
-    "got_principal": 8,
+    "got_price": 32,
+    "got_principal": 9,
     "got_mortgagor": 31
    },
    "parcels": {
@@ -75,5 +75,5 @@
   }
  },
  "deeds": 57,
- "with_consideration": 37
+ "with_consideration": 38
 }
