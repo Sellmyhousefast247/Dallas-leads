@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-25T13:42:37.751632+00:00",
+ "generated_at": "2026-10-26T15:17:13.381008+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -235,63 +235,6 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/330787853"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600201255",
-   "recorded": "2026-09-17",
-   "sale_date": "",
-   "property": "5018 BROOKHOLLOW DR, Sachse, TX 750484016",
-   "owner": "HOFER SANFORD",
-   "owner_source": "appraisal district",
-   "mail_address": "5018 BROOKHOLLOW DR, SACHSE, TEXAS 750484016",
-   "assessed_value": 0.0,
-   "buyer": "PHAM ANDREW",
-   "sale_price": 170000.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330777402"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600201244",
-   "recorded": "2026-09-17",
-   "sale_date": "",
-   "property": "5263 PENNRIDGE LN, Dallas, TX 752411204",
-   "owner": "SHORT RAVEN MICHELLE",
-   "owner_source": "appraisal district",
-   "mail_address": "5263 RENNRIDGE LN, DALLAS, TEXAS 752410000",
-   "assessed_value": 0.0,
-   "buyer": "ALTA SPV LLC",
-   "sale_price": 185200.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330777405"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600201070",
-   "recorded": "2026-09-17",
-   "sale_date": "September 1  2026",
-   "property": "7131 THURSTON DR, Dallas, TX 752354325",
-   "owner": "WILD LARK CAPITAL LLC",
-   "owner_source": "appraisal district",
-   "mail_address": "5301 ALPHA RD STE 66 # 36, DALLAS, TEXAS 752404698",
-   "assessed_value": 0.0,
-   "buyer": "DOUBLE BACKFLIP LLC",
-   "sale_price": 175000.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330775912"
   },
   {
    "county": "Bexar",
@@ -530,6 +473,44 @@
   },
   {
    "county": "Dallas",
+   "instrument": "202600226185",
+   "recorded": "2026-10-21",
+   "sale_date": "",
+   "property": "Subdivision-  Town: CEDAR HILL Name: WINDSOR PARK PHASE ONE Lot: 3 Block: P, Reference - 88205 / 233",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "WILLEMS DAN",
+   "sale_price": 152336.0,
+   "original_principal": 152336.0,
+   "provisional_spread": 0.0,
+   "lien_hits": [],
+   "status": "NO_SPREAD",
+   "why": "bid at or under original principal \u2014 payoff spread unlikely",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331727307"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600225856",
+   "recorded": "2026-10-21",
+   "sale_date": "",
+   "property": "Subdivision-  Town: LANCASTER Name: BEAR CREEK RANCH PHASE I Lot: 37 Block: F, Reference - 2005138 / 234",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "PENNYMAC LOAN SERVICES LLC",
+   "sale_price": 215558.0,
+   "original_principal": 215558.0,
+   "provisional_spread": 0.0,
+   "lien_hits": [],
+   "status": "NO_SPREAD",
+   "why": "bid at or under original principal \u2014 payoff spread unlikely",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331723096"
+  },
+  {
+   "county": "Dallas",
    "instrument": "202600225271",
    "recorded": "2026-10-20",
    "sale_date": "",
@@ -564,15 +545,21 @@
    "lien_hits": [
     {
      "type": "State Tax Lien",
-     "doc": "202600223128",
-     "filed": "2026-10-16",
-     "url": "https://dallas.tx.publicsearch.us/doc/331653029"
+     "doc": "202600227022",
+     "filed": "2026-10-22",
+     "url": "https://dallas.tx.publicsearch.us/doc/331745618"
     },
     {
      "type": "Federal Tax Lien",
      "doc": "202600223981",
      "filed": "2026-10-19",
      "url": "https://dallas.tx.publicsearch.us/doc/331691094"
+    },
+    {
+     "type": "State Tax Lien",
+     "doc": "202600223128",
+     "filed": "2026-10-16",
+     "url": "https://dallas.tx.publicsearch.us/doc/331653029"
     }
    ],
    "status": "NO_SPREAD",
@@ -711,6 +698,44 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331599572"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600221295",
+   "recorded": "2026-10-15",
+   "sale_date": "",
+   "property": "2817 ANDREA DR, Dallas, TX",
+   "owner": "DEBASED LLC",
+   "owner_source": "appraisal district",
+   "mail_address": "419 W WILSON ST, CLEBURNE, TX 76033",
+   "assessed_value": 231390.0,
+   "buyer": "TRIDENT REALTY INVESTMENTS ATLAS SPV LLC",
+   "sale_price": 260897.95,
+   "original_principal": 258750.0,
+   "provisional_spread": 2147.9500000000116,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331630940"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600227117",
+   "recorded": "2026-10-22",
+   "sale_date": "",
+   "property": "Subdivision-  Town: GARLAND Name: VICTORIA PLACE CONDOMINIUMS Lot: 5 Block: D, Reference - 84054 / 1855",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "FEDERAL HOME LOAN MORTGAGE CORPORATION",
+   "sale_price": 116200.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "financial-institution grantee \u2014 no surplus play",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331746946"
   },
   {
    "county": "Dallas",
@@ -904,7 +929,14 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "Mechanic's Lien",
+     "doc": "202600227296",
+     "filed": "2026-10-22",
+     "url": "https://dallas.tx.publicsearch.us/doc/331748381"
+    }
+   ],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331586352"
@@ -1022,25 +1054,6 @@
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/330814388"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600201069",
-   "recorded": "2026-09-17",
-   "sale_date": "September 1  2026",
-   "property": "7030 WINTERWOOD LN, Dallas, TX 752485159",
-   "owner": "TAVA HOLDINGS GROUP LLC",
-   "owner_source": "appraisal district",
-   "mail_address": "5819 SUMMERWOOD DR, GRAND PRAIRIE, TEXAS 750520434",
-   "assessed_value": 0.0,
-   "buyer": "U S BANK TRUST NATIONAL ASSOCIATION TR",
-   "sale_price": 653511.16,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330775926"
   },
   {
    "county": "Bexar",
