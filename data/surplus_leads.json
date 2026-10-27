@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-26T15:17:13.381008+00:00",
+ "generated_at": "2026-10-27T13:44:28.649836+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -148,14 +148,7 @@
    "sale_price": 255000.0,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [
-    {
-     "type": "State Tax Lien",
-     "doc": "202600223147",
-     "filed": "2026-10-16",
-     "url": "https://dallas.tx.publicsearch.us/doc/331653015"
-    }
-   ],
+   "lien_hits": [],
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331373033"
@@ -200,41 +193,22 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600201771",
-   "recorded": "2026-09-18",
+   "instrument": "202600203588",
+   "recorded": "2026-09-21",
    "sale_date": "",
-   "property": "8278 CLAREMONT DR, Dallas, TX 752285809",
-   "owner": "WADE MICHAEL R JR",
-   "owner_source": "appraisal district",
-   "mail_address": "8278 CLAREMONT DR, DALLAS, TEXAS 752285809",
-   "assessed_value": 0.0,
-   "buyer": "DO NGUYEN",
-   "sale_price": 281000.0,
+   "property": "Subdivision-  Town: DALLAS Name: LAS COLONITAS CONDOMINIUMS, Reference - 79189 / 1565",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "BAAZ RETAIL INVESTMENTS LLC",
+   "sale_price": 90000.0,
    "original_principal": null,
    "provisional_spread": null,
    "lien_hits": [],
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330788713"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600201672",
-   "recorded": "2026-09-18",
-   "sale_date": "",
-   "property": "8110 SKILLMAN ST, Dallas, TX 752312800",
-   "owner": "LUBARSKY GLENN JEROME",
-   "owner_source": "appraisal district",
-   "mail_address": "8110 SKILLMAN ST APT 1086, DALLAS, TEXAS 752312845",
-   "assessed_value": 0.0,
-   "buyer": "WILLEMS DAN",
-   "sale_price": 15000.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330787853"
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/330819391"
   },
   {
    "county": "Bexar",
@@ -544,12 +518,6 @@
    "provisional_spread": 0.0,
    "lien_hits": [
     {
-     "type": "State Tax Lien",
-     "doc": "202600227022",
-     "filed": "2026-10-22",
-     "url": "https://dallas.tx.publicsearch.us/doc/331745618"
-    },
-    {
      "type": "Federal Tax Lien",
      "doc": "202600223981",
      "filed": "2026-10-19",
@@ -557,9 +525,9 @@
     },
     {
      "type": "State Tax Lien",
-     "doc": "202600223128",
-     "filed": "2026-10-16",
-     "url": "https://dallas.tx.publicsearch.us/doc/331653029"
+     "doc": "202600227022",
+     "filed": "2026-10-22",
+     "url": "https://dallas.tx.publicsearch.us/doc/331745618"
     }
    ],
    "status": "NO_SPREAD",
@@ -609,11 +577,11 @@
    "instrument": "202600218710",
    "recorded": "2026-10-09",
    "sale_date": "",
-   "property": "Subdivision-  Town: DALLAS Name: SPRING DELL Lot: 21 Block: B NCB: 6095,, Reference - 9 / 105",
-   "owner": "CHRISTOPHER LEE WILLIAM DEZ AND",
-   "owner_source": "deed OCR",
-   "mail_address": "",
-   "assessed_value": null,
+   "property": "4229 MARSHALL ST, Dallas, TX 752101666",
+   "owner": "BATTIE KEANNA",
+   "owner_source": "appraisal district",
+   "mail_address": "4229 MARSHALL DR, DALLAS, TEXAS 752101666",
+   "assessed_value": 0.0,
    "buyer": "QC LAND DEVELOPMENT LLC",
    "sale_price": 367150.0,
    "original_principal": 367150.0,
@@ -789,14 +757,7 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [
-    {
-     "type": "State Tax Lien",
-     "doc": "202600223125",
-     "filed": "2026-10-16",
-     "url": "https://dallas.tx.publicsearch.us/doc/331653013"
-    }
-   ],
+   "lien_hits": [],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331694692"
@@ -940,6 +901,25 @@
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331586352"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600218988",
+   "recorded": "2026-10-12",
+   "sale_date": "",
+   "property": "1112 KITTERY DR, Desoto, TX 751158125",
+   "owner": "SMITH LEGINA JO",
+   "owner_source": "appraisal district",
+   "mail_address": "1112 KITTERY DR, DESOTO, TEXAS 751158125",
+   "assessed_value": 0.0,
+   "buyer": "CITIZENS BANK FKA",
+   "sale_price": 327200.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "financial-institution grantee \u2014 no surplus play",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331571730"
   },
   {
    "county": "Dallas",
