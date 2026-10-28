@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-27T13:44:28.649836+00:00",
+ "generated_at": "2026-10-28T13:36:31.818630+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -209,6 +209,25 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/330819391"
+  },
+  {
+   "county": "Bexar",
+   "instrument": "20260207600",
+   "recorded": "2026-10-23",
+   "sale_date": "",
+   "property": "514 PARK VILLAGE, SAN ANTONIO, TEXAS",
+   "owner": "EDUARDO MADRID",
+   "owner_source": "deed OCR",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "BUTCHER SANDRASUBSTITUTETRUSTEE",
+   "sale_price": 0.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_DEBT",
+   "why": "original principal not extracted \u2014 open deed PDF",
+   "deed_url": "https://bexar.tx.publicsearch.us/doc/331757882"
   },
   {
    "county": "Bexar",
@@ -577,11 +596,11 @@
    "instrument": "202600218710",
    "recorded": "2026-10-09",
    "sale_date": "",
-   "property": "4229 MARSHALL ST, Dallas, TX 752101666",
-   "owner": "BATTIE KEANNA",
-   "owner_source": "appraisal district",
-   "mail_address": "4229 MARSHALL DR, DALLAS, TEXAS 752101666",
-   "assessed_value": 0.0,
+   "property": "Subdivision-  Town: DALLAS Name: SPRING DELL Lot: 21 Block: B NCB: 6095,, Reference - 9 / 105",
+   "owner": "CHRISTOPHER LEE WILLIAM DEZ AND",
+   "owner_source": "deed OCR",
+   "mail_address": "",
+   "assessed_value": null,
    "buyer": "QC LAND DEVELOPMENT LLC",
    "sale_price": 367150.0,
    "original_principal": 367150.0,
