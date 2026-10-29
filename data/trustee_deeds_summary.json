@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-10-28T13:36:31.650011",
+ "generated_at": "2026-10-29T13:33:20.529516",
  "window": [
-  "2026-09-20",
-  "2026-10-25"
+  "2026-09-21",
+  "2026-10-26"
  ],
  "counties": {
   "dallas": {
@@ -11,23 +11,23 @@
    ],
    "deeds": 50,
    "with_consideration": 32,
-   "with_principal": 12,
-   "with_mortgagor": 27,
-   "with_owner": 38,
-   "with_address": 38,
+   "with_principal": 11,
+   "with_mortgagor": 28,
+   "with_owner": 37,
+   "with_address": 37,
    "enrichment": {
     "visited": 50,
     "ocr_ran": 50,
     "got_price": 32,
-    "got_principal": 12,
-    "got_mortgagor": 27
+    "got_principal": 11,
+    "got_mortgagor": 28
    },
    "parcels": {
     "api_missing": [],
-    "owner_hits": 1,
-    "legal_hits": 0,
-    "unmatched": 12,
-    "bulk_hits": 37,
+    "owner_hits": 0,
+    "legal_hits": 1,
+    "unmatched": 13,
+    "bulk_hits": 36,
     "bulk_rows": 862110
    },
    "warning": null
