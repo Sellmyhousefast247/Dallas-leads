@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-10-30T13:34:10.262442",
+ "generated_at": "2026-10-31T13:32:43.485827",
  "window": [
-  "2026-09-22",
-  "2026-10-27"
+  "2026-09-23",
+  "2026-10-28"
  ],
  "counties": {
   "dallas": {
@@ -10,24 +10,24 @@
     "TD"
    ],
    "deeds": 50,
-   "with_consideration": 31,
-   "with_principal": 12,
-   "with_mortgagor": 27,
-   "with_owner": 36,
-   "with_address": 37,
+   "with_consideration": 33,
+   "with_principal": 11,
+   "with_mortgagor": 29,
+   "with_owner": 34,
+   "with_address": 36,
    "enrichment": {
     "visited": 50,
     "ocr_ran": 50,
-    "got_price": 31,
-    "got_principal": 12,
-    "got_mortgagor": 27
+    "got_price": 33,
+    "got_principal": 11,
+    "got_mortgagor": 29
    },
    "parcels": {
     "api_missing": [],
-    "owner_hits": 1,
+    "owner_hits": 0,
     "legal_hits": 1,
-    "unmatched": 14,
-    "bulk_hits": 34,
+    "unmatched": 16,
+    "bulk_hits": 33,
     "bulk_rows": 862110
    },
    "warning": null
@@ -37,17 +37,17 @@
     "party:SUBSTITUTE TRUSTEE"
    ],
    "deeds": 8,
-   "with_consideration": 7,
+   "with_consideration": 6,
    "with_principal": 4,
-   "with_mortgagor": 8,
+   "with_mortgagor": 7,
    "with_owner": 0,
    "with_address": 8,
    "enrichment": {
     "visited": 8,
-    "ocr_ran": 8,
-    "got_price": 7,
+    "ocr_ran": 7,
+    "got_price": 6,
     "got_principal": 4,
-    "got_mortgagor": 8
+    "got_mortgagor": 7
    },
    "parcels": {
     "api_missing": [
@@ -75,5 +75,5 @@
   }
  },
  "deeds": 58,
- "with_consideration": 38
+ "with_consideration": 39
 }
