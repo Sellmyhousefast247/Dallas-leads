@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-02T23:18:53.678471+00:00",
+ "generated_at": "2026-11-03T21:05:26.096276+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -57,6 +57,25 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332131034"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600229348",
+   "recorded": "2026-10-27",
+   "sale_date": "",
+   "property": "Subdivision-  Town: LANCASTER Name: LANCASTER NORTH TWO PHASE I Lot: 12 Block: D, Reference - 81065 / 2786",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "PENNYMAC LOAN SERVICES LLC",
+   "sale_price": 280000.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_DEBT",
+   "why": "original principal not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332119594"
   },
   {
    "county": "Dallas",
@@ -563,7 +582,7 @@
    "instrument": "202600221877",
    "recorded": "2026-10-15",
    "sale_date": "",
-   "property": "Subdivision-  Town: MESQUITE Name: CREEK CROSSING ESTATES NO 15 PHASE A Lot: 10 Block: B, Reference - 97212 / 2413",
+   "property": "1 Property Address: 727 ELLA AVE, DALLAS, TX 75217",
    "owner": "ALEJANDRO GARCIA HUERTA AND MARTHA",
    "owner_source": "deed OCR",
    "mail_address": "",
@@ -614,25 +633,6 @@
    "status": "NO_SPREAD",
    "why": "bid at or under original principal \u2014 payoff spread unlikely",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331564835"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600206554",
-   "recorded": "2026-09-25",
-   "sale_date": "",
-   "property": "517 CLARK ST, Garland (Dallas Co), TX 750407315",
-   "owner": "VASQUEZ ELIZABETH &",
-   "owner_source": "appraisal district",
-   "mail_address": "MATA ALEXANDRA E V 517 CLARK ST, GARLAND, TEXAS 750407315",
-   "assessed_value": 0.0,
-   "buyer": "COUCH ENTERPRISES LP",
-   "sale_price": 182631.0,
-   "original_principal": 182631.0,
-   "provisional_spread": 0.0,
-   "lien_hits": [],
-   "status": "NO_SPREAD",
-   "why": "bid at or under original principal \u2014 payoff spread unlikely",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330877492"
   },
   {
    "county": "Bexar",
@@ -864,25 +864,6 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600222822",
-   "recorded": "2026-10-16",
-   "sale_date": "",
-   "property": "3551 ESPANOLA DR, Dallas, TX 752203637",
-   "owner": "MI CASA TU CASA LLC",
-   "owner_source": "appraisal district",
-   "mail_address": "2108 BERSHIRE DR, FLOWER MOUND, TEXAS 750284502",
-   "assessed_value": 0.0,
-   "buyer": "WILMINGTON SAVINGS FUND SOCIETY TR",
-   "sale_price": 245730.42,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/331646837"
-  },
-  {
-   "county": "Dallas",
    "instrument": "202600222949",
    "recorded": "2026-10-16",
    "sale_date": "",
@@ -899,6 +880,25 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331648558"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600222822",
+   "recorded": "2026-10-16",
+   "sale_date": "",
+   "property": "3551 ESPANOLA DR, Dallas, TX 752203637",
+   "owner": "MI CASA TU CASA LLC",
+   "owner_source": "appraisal district",
+   "mail_address": "2108 BERSHIRE DR, FLOWER MOUND, TEXAS 750284502",
+   "assessed_value": 0.0,
+   "buyer": "WILMINGTON SAVINGS FUND SOCIETY TR",
+   "sale_price": 245730.42,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "financial-institution grantee \u2014 no surplus play",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331646837"
   },
   {
    "county": "Dallas",
