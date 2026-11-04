@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-03T21:05:26.096276+00:00",
+ "generated_at": "2026-11-04T20:44:05.247928+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -41,6 +41,25 @@
   },
   {
    "county": "Dallas",
+   "instrument": "202600230929",
+   "recorded": "2026-10-28",
+   "sale_date": "",
+   "property": "1002 MONTCLAIR DR, Garland (Dallas Co), TX 750408191",
+   "owner": "SENDEJO PEDRO & YAMARA",
+   "owner_source": "appraisal district",
+   "mail_address": "1002 MONTCLAIR DR, GARLAND, TEXAS 750408191",
+   "assessed_value": 0.0,
+   "buyer": "PENNYMAC LOAN SERVICES LLC",
+   "sale_price": 152500.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_DEBT",
+   "why": "original principal not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332142074"
+  },
+  {
+   "county": "Dallas",
    "instrument": "202600230008",
    "recorded": "2026-10-27",
    "sale_date": "",
@@ -63,11 +82,11 @@
    "instrument": "202600229348",
    "recorded": "2026-10-27",
    "sale_date": "",
-   "property": "Subdivision-  Town: LANCASTER Name: LANCASTER NORTH TWO PHASE I Lot: 12 Block: D, Reference - 81065 / 2786",
-   "owner": "",
-   "owner_source": "",
-   "mail_address": "",
-   "assessed_value": null,
+   "property": "2919 PEPPERIDGE DR, Lancaster, TX",
+   "owner": "WILSON CHANDRA",
+   "owner_source": "appraisal district",
+   "mail_address": "2919 E PEPPERIDGE DR, LANCASTER, TX 75134",
+   "assessed_value": 393580.0,
    "buyer": "PENNYMAC LOAN SERVICES LLC",
    "sale_price": 280000.0,
    "original_principal": null,
@@ -167,7 +186,14 @@
    "sale_price": 16955.0,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "Federal Tax Lien",
+     "doc": "202600232096",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332159819"
+    }
+   ],
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331630579"
@@ -310,11 +336,11 @@
    "instrument": "202600230272",
    "recorded": "2026-10-28",
    "sale_date": "",
-   "property": "Subdivision-  Town: GARLAND Name: HIDDEN FOREST ESTATES Lot: 11 Block: 4, Reference - 2004072 / 16",
-   "owner": "Ina Hasenberg",
-   "owner_source": "deed OCR",
-   "mail_address": "",
-   "assessed_value": null,
+   "property": "1902 SMOKE TREE TRL, Garland, TX",
+   "owner": "DONALD CLAUDIA LIVING TRUST",
+   "owner_source": "appraisal district",
+   "mail_address": "1902 SMOKE TREE TRL, GARLAND, TX 75040",
+   "assessed_value": 531930.0,
    "buyer": "HASENBERG INA",
    "sale_price": null,
    "original_principal": null,
@@ -549,6 +575,12 @@
    "provisional_spread": 0.0,
    "lien_hits": [
     {
+     "type": "State Tax Lien",
+     "doc": "202600232236",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332160952"
+    },
+    {
      "type": "Lis Pendens",
      "doc": "202600231314",
      "filed": "2026-10-28",
@@ -565,12 +597,6 @@
      "doc": "202600228621",
      "filed": "2026-10-26",
      "url": "https://dallas.tx.publicsearch.us/doc/332103758"
-    },
-    {
-     "type": "State Tax Lien",
-     "doc": "202600227022",
-     "filed": "2026-10-22",
-     "url": "https://dallas.tx.publicsearch.us/doc/331745618"
     }
    ],
    "status": "NO_SPREAD",
@@ -582,7 +608,7 @@
    "instrument": "202600221877",
    "recorded": "2026-10-15",
    "sale_date": "",
-   "property": "1 Property Address: 727 ELLA AVE, DALLAS, TX 75217",
+   "property": "Subdivision-  Town: MESQUITE Name: CREEK CROSSING ESTATES NO 15 PHASE A Lot: 10 Block: B, Reference - 97212 / 2413",
    "owner": "ALEJANDRO GARCIA HUERTA AND MARTHA",
    "owner_source": "deed OCR",
    "mail_address": "",
@@ -667,7 +693,14 @@
    "sale_price": 120513.43,
    "original_principal": 117000.0,
    "provisional_spread": 3513.429999999993,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "Federal Tax Lien",
+     "doc": "202600232098",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332159880"
+    }
+   ],
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331599572"
@@ -686,29 +719,23 @@
    "sale_price": 105000.0,
    "original_principal": 105000.0,
    "provisional_spread": 0.0,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "HOA Assessment Lien",
+     "doc": "202600232781",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332166904"
+    },
+    {
+     "type": "HOA Assessment Lien",
+     "doc": "202600232590",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332162455"
+    }
+   ],
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332141633"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600230929",
-   "recorded": "2026-10-28",
-   "sale_date": "",
-   "property": "1002 MONTCLAIR DR, Garland (Dallas Co), TX 750408191",
-   "owner": "SENDEJO PEDRO & YAMARA",
-   "owner_source": "appraisal district",
-   "mail_address": "1002 MONTCLAIR DR, GARLAND, TEXAS 750408191",
-   "assessed_value": 0.0,
-   "buyer": "PENNYMAC LOAN SERVICES LLC",
-   "sale_price": 152500.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/332142074"
   },
   {
    "county": "Dallas",
@@ -753,11 +780,11 @@
    "instrument": "202600228310",
    "recorded": "2026-10-26",
    "sale_date": "",
-   "property": "Subdivision-  Town: BALCH SPRINGS Name: SPRING OAKS FIFTH INSTALLMENT Lot: 12 Block: 3, Reference - 533 / 1940",
-   "owner": "",
-   "owner_source": "",
-   "mail_address": "",
-   "assessed_value": null,
+   "property": "14205 BRIARCREST LN, Balch Springs, TX",
+   "owner": "MOLINA LUIS &",
+   "owner_source": "appraisal district",
+   "mail_address": "14205 BRIARCREST DR, BALCH SPRINGS, TX 75180",
+   "assessed_value": 205180.0,
    "buyer": "MIDFIRST BANK",
    "sale_price": null,
    "original_principal": null,
@@ -857,29 +884,17 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "HOA Assessment Lien",
+     "doc": "202600232774",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332166890"
+    }
+   ],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331694692"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600222949",
-   "recorded": "2026-10-16",
-   "sale_date": "",
-   "property": "6317 MASON CT, Dallas, TX 75227",
-   "owner": "MARSHALL MANNASER III",
-   "owner_source": "appraisal district",
-   "mail_address": "6317 MASON CT, DALLAS, TEXAS 752272900",
-   "assessed_value": 0.0,
-   "buyer": "SOUTHSTATE BANK",
-   "sale_price": 369900.0,
-   "original_principal": 369900.0,
-   "provisional_spread": 0.0,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/331648558"
   },
   {
    "county": "Dallas",
@@ -899,6 +914,25 @@
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331646837"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600222949",
+   "recorded": "2026-10-16",
+   "sale_date": "",
+   "property": "6317 MASON CT, Dallas, TX 75227",
+   "owner": "MARSHALL MANNASER III",
+   "owner_source": "appraisal district",
+   "mail_address": "6317 MASON CT, DALLAS, TEXAS 752272900",
+   "assessed_value": 0.0,
+   "buyer": "SOUTHSTATE BANK",
+   "sale_price": 369900.0,
+   "original_principal": 369900.0,
+   "provisional_spread": 0.0,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331648558"
   },
   {
    "county": "Dallas",
@@ -990,14 +1024,7 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [
-    {
-     "type": "Mechanic's Lien",
-     "doc": "202600227296",
-     "filed": "2026-10-22",
-     "url": "https://dallas.tx.publicsearch.us/doc/331748381"
-    }
-   ],
+   "lien_hits": [],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331586352"
