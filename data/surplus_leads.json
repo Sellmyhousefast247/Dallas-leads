@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T20:44:05.247928+00:00",
+ "generated_at": "2026-11-05T20:53:10.941649+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -38,25 +38,6 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332135927"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600230929",
-   "recorded": "2026-10-28",
-   "sale_date": "",
-   "property": "1002 MONTCLAIR DR, Garland (Dallas Co), TX 750408191",
-   "owner": "SENDEJO PEDRO & YAMARA",
-   "owner_source": "appraisal district",
-   "mail_address": "1002 MONTCLAIR DR, GARLAND, TEXAS 750408191",
-   "assessed_value": 0.0,
-   "buyer": "PENNYMAC LOAN SERVICES LLC",
-   "sale_price": 152500.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/332142074"
   },
   {
    "county": "Dallas",
@@ -575,12 +556,6 @@
    "provisional_spread": 0.0,
    "lien_hits": [
     {
-     "type": "State Tax Lien",
-     "doc": "202600232236",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332160952"
-    },
-    {
      "type": "Lis Pendens",
      "doc": "202600231314",
      "filed": "2026-10-28",
@@ -591,6 +566,12 @@
      "doc": "202600231294",
      "filed": "2026-10-28",
      "url": "https://dallas.tx.publicsearch.us/doc/332148347"
+    },
+    {
+     "type": "State Tax Lien",
+     "doc": "202600232236",
+     "filed": "2026-10-29",
+     "url": "https://dallas.tx.publicsearch.us/doc/332160952"
     },
     {
      "type": "State Tax Lien",
@@ -736,6 +717,25 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332141633"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600230929",
+   "recorded": "2026-10-28",
+   "sale_date": "",
+   "property": "1002 MONTCLAIR DR, Garland (Dallas Co), TX 750408191",
+   "owner": "SENDEJO PEDRO & YAMARA",
+   "owner_source": "appraisal district",
+   "mail_address": "1002 MONTCLAIR DR, GARLAND, TEXAS 750408191",
+   "assessed_value": 0.0,
+   "buyer": "PENNYMAC LOAN SERVICES LLC",
+   "sale_price": 152500.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332142074"
   },
   {
    "county": "Dallas",
