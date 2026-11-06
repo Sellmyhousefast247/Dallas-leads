@@ -1,6 +1,25 @@
 {
- "generated_at": "2026-11-05T20:53:10.941649+00:00",
+ "generated_at": "2026-11-06T20:17:21.103807+00:00",
  "leads": [
+  {
+   "county": "Dallas",
+   "instrument": "202600236020",
+   "recorded": "2026-11-03",
+   "sale_date": "",
+   "property": "Subdivision-  Town: DALLAS Name: LAGOW HEIGHTS Lot: 4 Block: A NCB: 1775,, Reference - 8 / 259",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "PAJ FUND I LLC",
+   "sale_price": 131000.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_DEBT",
+   "why": "original principal not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332222975"
+  },
   {
    "county": "Dallas",
    "instrument": "202600231251",
@@ -57,25 +76,6 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332131034"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600229348",
-   "recorded": "2026-10-27",
-   "sale_date": "",
-   "property": "2919 PEPPERIDGE DR, Lancaster, TX",
-   "owner": "WILSON CHANDRA",
-   "owner_source": "appraisal district",
-   "mail_address": "2919 E PEPPERIDGE DR, LANCASTER, TX 75134",
-   "assessed_value": 393580.0,
-   "buyer": "PENNYMAC LOAN SERVICES LLC",
-   "sale_price": 280000.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/332119594"
   },
   {
    "county": "Dallas",
@@ -314,6 +314,25 @@
   },
   {
    "county": "Dallas",
+   "instrument": "202600234937",
+   "recorded": "2026-11-02",
+   "sale_date": "",
+   "property": "Subdivision-  Town: DALLAS Name: FORESTWOOD ON THE CREEK CONDOMINIUMS Lot: 1325 Block: M, Reference - 83158 / 532",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "ELHASNI EBTEHAG",
+   "sale_price": null,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_PRICE",
+   "why": "winning bid not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332207345"
+  },
+  {
+   "county": "Dallas",
    "instrument": "202600230272",
    "recorded": "2026-10-28",
    "sale_date": "",
@@ -466,25 +485,6 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600207986",
-   "recorded": "2026-09-28",
-   "sale_date": "",
-   "property": "6601 LUMLEY RD, Mesquite (Dallas Co), TX 75181",
-   "owner": "SMITH TYRONE SR",
-   "owner_source": "appraisal district",
-   "mail_address": "6601 LUMLEY RD, MESQUITE, TEXAS 751813609",
-   "assessed_value": 0.0,
-   "buyer": "MECCA FA INVESTMENTS LLC",
-   "sale_price": null,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_PRICE",
-   "why": "winning bid not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330895804"
-  },
-  {
-   "county": "Dallas",
    "instrument": "202600226185",
    "recorded": "2026-10-21",
    "sale_date": "",
@@ -572,12 +572,6 @@
      "doc": "202600232236",
      "filed": "2026-10-29",
      "url": "https://dallas.tx.publicsearch.us/doc/332160952"
-    },
-    {
-     "type": "State Tax Lien",
-     "doc": "202600228621",
-     "filed": "2026-10-26",
-     "url": "https://dallas.tx.publicsearch.us/doc/332103758"
     }
    ],
    "status": "NO_SPREAD",
@@ -589,7 +583,7 @@
    "instrument": "202600221877",
    "recorded": "2026-10-15",
    "sale_date": "",
-   "property": "Subdivision-  Town: MESQUITE Name: CREEK CROSSING ESTATES NO 15 PHASE A Lot: 10 Block: B, Reference - 97212 / 2413",
+   "property": "1 Property Address: 727 ELLA AVE, DALLAS, TX 75217",
    "owner": "ALEJANDRO GARCIA HUERTA AND MARTHA",
    "owner_source": "deed OCR",
    "mail_address": "",
@@ -685,6 +679,25 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331599572"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600236164",
+   "recorded": "2026-11-03",
+   "sale_date": "",
+   "property": "Subdivision-  Town: DALLAS Name: WINDTREE CONDOMINIUMS Lot: 1087 Block: Q, Reference - 80098 / 1252",
+   "owner": "",
+   "owner_source": "",
+   "mail_address": "",
+   "assessed_value": null,
+   "buyer": "RAIDER LENDING SOLUTIONS LLC",
+   "sale_price": 50000.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332223642"
   },
   {
    "county": "Dallas",
@@ -796,25 +809,6 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600228345",
-   "recorded": "2026-10-26",
-   "sale_date": "",
-   "property": "2604 HOLM DR, Garland (Dallas Co), TX 750412523",
-   "owner": "HERNANDEZ ALONDRA GUADALUPE",
-   "owner_source": "appraisal district",
-   "mail_address": "2604 HOLM DR, GARLAND, TEXAS 750412523",
-   "assessed_value": 0.0,
-   "buyer": "LAKEVIEW LOAN SERVICING LLC",
-   "sale_price": 192500.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/332099970"
-  },
-  {
-   "county": "Dallas",
    "instrument": "202600227117",
    "recorded": "2026-10-22",
    "sale_date": "",
@@ -898,25 +892,6 @@
   },
   {
    "county": "Dallas",
-   "instrument": "202600222822",
-   "recorded": "2026-10-16",
-   "sale_date": "",
-   "property": "3551 ESPANOLA DR, Dallas, TX 752203637",
-   "owner": "MI CASA TU CASA LLC",
-   "owner_source": "appraisal district",
-   "mail_address": "2108 BERSHIRE DR, FLOWER MOUND, TEXAS 750284502",
-   "assessed_value": 0.0,
-   "buyer": "WILMINGTON SAVINGS FUND SOCIETY TR",
-   "sale_price": 245730.42,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/331646837"
-  },
-  {
-   "county": "Dallas",
    "instrument": "202600222949",
    "recorded": "2026-10-16",
    "sale_date": "",
@@ -933,6 +908,25 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331648558"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600222822",
+   "recorded": "2026-10-16",
+   "sale_date": "",
+   "property": "3551 ESPANOLA DR, Dallas, TX 752203637",
+   "owner": "MI CASA TU CASA LLC",
+   "owner_source": "appraisal district",
+   "mail_address": "2108 BERSHIRE DR, FLOWER MOUND, TEXAS 750284502",
+   "assessed_value": 0.0,
+   "buyer": "WILMINGTON SAVINGS FUND SOCIETY TR",
+   "sale_price": 245730.42,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "financial-institution grantee \u2014 no surplus play",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/331646837"
   },
   {
    "county": "Dallas",
@@ -1024,7 +1018,14 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [],
+   "lien_hits": [
+    {
+     "type": "Hospital Lien",
+     "doc": "202600236066",
+     "filed": "2026-11-03",
+     "url": "https://dallas.tx.publicsearch.us/doc/332222998"
+    }
+   ],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331586352"
