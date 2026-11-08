@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-07T18:23:10.958582+00:00",
+ "generated_at": "2026-11-08T18:38:38.411159+00:00",
  "leads": [
   {
    "county": "Dallas",
@@ -275,25 +275,6 @@
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331373033"
   },
   {
-   "county": "Dallas",
-   "instrument": "202600210659",
-   "recorded": "2026-09-30",
-   "sale_date": "",
-   "property": "530 ELSTON DR, Dallas, TX 752323228",
-   "owner": "SOUTH DALLAS RENTALS",
-   "owner_source": "appraisal district",
-   "mail_address": "LLC 6929 LOCKHEED AVE, DALLAS, TEXAS 752094607",
-   "assessed_value": 0.0,
-   "buyer": "HERLAN PEAK FUNDING TRUST",
-   "sale_price": 139213.57,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330939499"
-  },
-  {
    "county": "Bexar",
    "instrument": "20260207600",
    "recorded": "2026-10-23",
@@ -373,8 +354,8 @@
    "county": "Dallas",
    "instrument": "202600230754",
    "recorded": "2026-10-28",
-   "sale_date": "September 1  2026",
-   "property": "Subdivision-  Town: DALLAS Name: WESTHAVEN FIRST SECTION Lot: 4 Block: D NCB: 6967,, Reference - 44 / 35",
+   "sale_date": "",
+   "property": "4542 Silversprings Drive, Dallas, TX 75211",
    "owner": "MARILU DIAZ AND ALEJANDRO V",
    "owner_source": "deed OCR",
    "mail_address": "",
@@ -575,18 +556,6 @@
    "provisional_spread": 0.0,
    "lien_hits": [
     {
-     "type": "Lis Pendens",
-     "doc": "202600231314",
-     "filed": "2026-10-28",
-     "url": "https://dallas.tx.publicsearch.us/doc/332148359"
-    },
-    {
-     "type": "Lis Pendens",
-     "doc": "202600231294",
-     "filed": "2026-10-28",
-     "url": "https://dallas.tx.publicsearch.us/doc/332148347"
-    },
-    {
      "type": "State Tax Lien",
      "doc": "202600232236",
      "filed": "2026-10-29",
@@ -722,7 +691,7 @@
    "county": "Dallas",
    "instrument": "202600230816",
    "recorded": "2026-10-28",
-   "sale_date": "",
+   "sale_date": "September 1  2026",
    "property": "Subdivision-  Town: NO TOWN Name: RICHLAND TRACE CONDOMINIUM PHASE V Lot: 107 Block: L, Reference - 80239 / 9",
    "owner": "From Jacksonville LLC",
    "owner_source": "deed OCR",
@@ -806,6 +775,25 @@
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332100579"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600228310",
+   "recorded": "2026-10-26",
+   "sale_date": "",
+   "property": "14205 BRIARCREST LN, Balch Springs, TX",
+   "owner": "MOLINA LUIS &",
+   "owner_source": "appraisal district",
+   "mail_address": "14205 BRIARCREST DR, BALCH SPRINGS, TX 75180",
+   "assessed_value": 205180.0,
+   "buyer": "MIDFIRST BANK",
+   "sale_price": null,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "financial-institution grantee \u2014 no surplus play",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332099319"
   },
   {
    "county": "Dallas",
