@@ -1,6 +1,25 @@
 {
- "generated_at": "2026-11-08T18:38:38.411159+00:00",
+ "generated_at": "2026-11-09T23:18:25.511429+00:00",
  "leads": [
+  {
+   "county": "Dallas",
+   "instrument": "202600238576",
+   "recorded": "2026-11-05",
+   "sale_date": "",
+   "property": "1821 E CROSBY RD, Carrollton (Dallas Co), TX 750067390",
+   "owner": "PARK RUSSELL",
+   "owner_source": "appraisal district",
+   "mail_address": "% AMIJO ROSALBA 1821 E CROSBY RD, CARROLLTON, TEXAS 750067390",
+   "assessed_value": 0.0,
+   "buyer": "ARMIJO ROSALBA",
+   "sale_price": 121500.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "NEEDS_DEBT",
+   "why": "original principal not extracted \u2014 open deed PDF",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332263824"
+  },
   {
    "county": "Dallas",
    "instrument": "202600237017",
@@ -186,14 +205,7 @@
    "sale_price": 16955.0,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [
-    {
-     "type": "Federal Tax Lien",
-     "doc": "202600232096",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332159819"
-    }
-   ],
+   "lien_hits": [],
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331630579"
@@ -292,25 +304,6 @@
    "status": "NEEDS_DEBT",
    "why": "original principal not extracted \u2014 open deed PDF",
    "deed_url": "https://bexar.tx.publicsearch.us/doc/331757882"
-  },
-  {
-   "county": "Bexar",
-   "instrument": "20260193422",
-   "recorded": "2026-10-01",
-   "sale_date": "",
-   "property": "5503 RED SKY ST, SAN ANTONIO, TEXAS",
-   "owner": "SANDRA BUTCHER",
-   "owner_source": "deed OCR",
-   "mail_address": "",
-   "assessed_value": null,
-   "buyer": "OBREGON ARMANDO G MANZANARES",
-   "sale_price": 125000.0,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "NEEDS_DEBT",
-   "why": "original principal not extracted \u2014 open deed PDF",
-   "deed_url": "https://bexar.tx.publicsearch.us/doc/330978835"
   },
   {
    "county": "Dallas",
@@ -554,14 +547,7 @@
    "sale_price": 98000000.0,
    "original_principal": 98000000.0,
    "provisional_spread": 0.0,
-   "lien_hits": [
-    {
-     "type": "State Tax Lien",
-     "doc": "202600232236",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332160952"
-    }
-   ],
+   "lien_hits": [],
    "status": "NO_SPREAD",
    "why": "bid at or under original principal \u2014 payoff spread unlikely",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331630582"
@@ -656,17 +642,29 @@
    "sale_price": 120513.43,
    "original_principal": 117000.0,
    "provisional_spread": 3513.429999999993,
-   "lien_hits": [
-    {
-     "type": "Federal Tax Lien",
-     "doc": "202600232098",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332159880"
-    }
-   ],
+   "lien_hits": [],
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331599572"
+  },
+  {
+   "county": "Dallas",
+   "instrument": "202600238699",
+   "recorded": "2026-11-05",
+   "sale_date": "",
+   "property": "14311 SKYFROST DR, Dallas, TX 752535757",
+   "owner": "RODOLFO HERNANDEZ SALAS",
+   "owner_source": "appraisal district",
+   "mail_address": "TRLR 144 14311 SKYFROST DR, DALLAS, TEXAS 752535774",
+   "assessed_value": 0.0,
+   "buyer": "DEZHAM HOSSAIN",
+   "sale_price": 225876.0,
+   "original_principal": null,
+   "provisional_spread": null,
+   "lien_hits": [],
+   "status": "LENDER_BUYBACK",
+   "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
+   "deed_url": "https://dallas.tx.publicsearch.us/doc/332268243"
   },
   {
    "county": "Dallas",
@@ -701,20 +699,7 @@
    "sale_price": 105000.0,
    "original_principal": 105000.0,
    "provisional_spread": 0.0,
-   "lien_hits": [
-    {
-     "type": "HOA Assessment Lien",
-     "doc": "202600232781",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332166904"
-    },
-    {
-     "type": "HOA Assessment Lien",
-     "doc": "202600232590",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332162455"
-    }
-   ],
+   "lien_hits": [],
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332141633"
@@ -775,25 +760,6 @@
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/332100579"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600228310",
-   "recorded": "2026-10-26",
-   "sale_date": "",
-   "property": "14205 BRIARCREST LN, Balch Springs, TX",
-   "owner": "MOLINA LUIS &",
-   "owner_source": "appraisal district",
-   "mail_address": "14205 BRIARCREST DR, BALCH SPRINGS, TX 75180",
-   "assessed_value": 205180.0,
-   "buyer": "MIDFIRST BANK",
-   "sale_price": null,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/332099319"
   },
   {
    "county": "Dallas",
@@ -866,14 +832,7 @@
    "sale_price": null,
    "original_principal": null,
    "provisional_spread": null,
-   "lien_hits": [
-    {
-     "type": "HOA Assessment Lien",
-     "doc": "202600232774",
-     "filed": "2026-10-29",
-     "url": "https://dallas.tx.publicsearch.us/doc/332166890"
-    }
-   ],
+   "lien_hits": [],
    "status": "LENDER_BUYBACK",
    "why": "financial-institution grantee \u2014 no surplus play",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331694692"
@@ -1036,25 +995,6 @@
    "status": "LENDER_BUYBACK",
    "why": "buyer matches the deed's own lender/beneficiary \u2014 credit-bid buyback",
    "deed_url": "https://dallas.tx.publicsearch.us/doc/331040849"
-  },
-  {
-   "county": "Dallas",
-   "instrument": "202600211571",
-   "recorded": "2026-10-01",
-   "sale_date": "September 01  2026",
-   "property": "Subdivision-  Town: DALLAS Name: LIVE OAK LOFTS CONDOMINIUM Lot: 110, Reference - 2003011 / 113",
-   "owner": "",
-   "owner_source": "",
-   "mail_address": "",
-   "assessed_value": null,
-   "buyer": "U S BANK TRUST NATIONAL ASSOCIATION TR",
-   "sale_price": null,
-   "original_principal": null,
-   "provisional_spread": null,
-   "lien_hits": [],
-   "status": "LENDER_BUYBACK",
-   "why": "financial-institution grantee \u2014 no surplus play",
-   "deed_url": "https://dallas.tx.publicsearch.us/doc/330959545"
   },
   {
    "county": "Bexar",

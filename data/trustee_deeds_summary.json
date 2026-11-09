@@ -1,8 +1,8 @@
 {
- "generated_at": "2026-11-08T18:38:38.164202",
+ "generated_at": "2026-11-09T23:18:25.281520",
  "window": [
-  "2026-10-01",
-  "2026-11-05"
+  "2026-10-02",
+  "2026-11-06"
  ],
  "counties": {
   "dallas": {
@@ -10,24 +10,24 @@
     "TD"
    ],
    "deeds": 50,
-   "with_consideration": 34,
+   "with_consideration": 36,
    "with_principal": 11,
-   "with_mortgagor": 29,
-   "with_owner": 31,
-   "with_address": 33,
+   "with_mortgagor": 30,
+   "with_owner": 32,
+   "with_address": 34,
    "enrichment": {
     "visited": 50,
     "ocr_ran": 50,
-    "got_price": 34,
+    "got_price": 36,
     "got_principal": 11,
-    "got_mortgagor": 29
+    "got_mortgagor": 30
    },
    "parcels": {
     "api_missing": [],
     "owner_hits": 0,
-    "legal_hits": 2,
-    "unmatched": 19,
-    "bulk_hits": 29,
+    "legal_hits": 1,
+    "unmatched": 18,
+    "bulk_hits": 31,
     "bulk_rows": 862110
    },
    "warning": null
@@ -36,18 +36,18 @@
    "confirmed_codes": [
     "party:SUBSTITUTE TRUSTEE"
    ],
-   "deeds": 7,
-   "with_consideration": 6,
+   "deeds": 6,
+   "with_consideration": 5,
    "with_principal": 3,
-   "with_mortgagor": 7,
+   "with_mortgagor": 6,
    "with_owner": 0,
-   "with_address": 7,
+   "with_address": 6,
    "enrichment": {
-    "visited": 7,
-    "ocr_ran": 7,
-    "got_price": 6,
+    "visited": 6,
+    "ocr_ran": 6,
+    "got_price": 5,
     "got_principal": 3,
-    "got_mortgagor": 7
+    "got_mortgagor": 6
    },
    "parcels": {
     "api_missing": [
@@ -74,6 +74,6 @@
    "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
   }
  },
- "deeds": 57,
- "with_consideration": 40
+ "deeds": 56,
+ "with_consideration": 41
 }
