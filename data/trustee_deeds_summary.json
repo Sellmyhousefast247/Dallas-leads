@@ -1,65 +1,21 @@
 {
- "generated_at": "2026-11-18T21:34:31.884129",
+ "generated_at": "2026-11-19T21:25:17.976725",
  "window": [
-  "2026-10-11",
-  "2026-11-15"
+  "2026-10-12",
+  "2026-11-16"
  ],
  "counties": {
   "dallas": {
-   "confirmed_codes": [
-    "TD"
-   ],
-   "deeds": 50,
-   "with_consideration": 37,
-   "with_principal": 10,
-   "with_mortgagor": 31,
-   "with_owner": 38,
-   "with_address": 44,
-   "enrichment": {
-    "visited": 50,
-    "ocr_ran": 49,
-    "got_price": 37,
-    "got_principal": 10,
-    "got_mortgagor": 31
-   },
-   "parcels": {
-    "api_missing": [],
-    "owner_hits": 1,
-    "legal_hits": 0,
-    "unmatched": 12,
-    "bulk_hits": 37,
-    "bulk_rows": 862744
-   },
-   "warning": null
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261012%2C20261116&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "deeds": 0,
+   "with_consideration": 0,
+   "confirmed_codes": []
   },
   "bexar": {
-   "confirmed_codes": [
-    "party:SUBSTITUTE TRUSTEE"
-   ],
-   "deeds": 4,
-   "with_consideration": 4,
-   "with_principal": 2,
-   "with_mortgagor": 3,
-   "with_owner": 0,
-   "with_address": 4,
-   "enrichment": {
-    "visited": 4,
-    "ocr_ran": 4,
-    "got_price": 4,
-    "got_principal": 2,
-    "got_mortgagor": 3
-   },
-   "parcels": {
-    "api_missing": [
-     "bexar"
-    ],
-    "owner_hits": 0,
-    "legal_hits": 0,
-    "unmatched": 0,
-    "bulk_hits": 0,
-    "bulk_rows": 862744
-   },
-   "warning": null
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261012%2C20261116&limit=50&offset=0\", waiting until \"networkidle\"\n",
+   "deeds": 0,
+   "with_consideration": 0,
+   "confirmed_codes": []
   },
   "tarrant": {
    "confirmed_codes": [],
@@ -74,6 +30,6 @@
    "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
   }
  },
- "deeds": 54,
- "with_consideration": 41
+ "deeds": 0,
+ "with_consideration": 0
 }
