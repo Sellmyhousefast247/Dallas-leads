@@ -1,29 +1,52 @@
 {
- "generated_at": "2026-11-20T21:11:06.718288",
+ "generated_at": "2026-11-21T20:09:19.861431",
  "window": [
-  "2026-10-13",
-  "2026-11-17"
+  "2026-10-14",
+  "2026-11-18"
  ],
  "counties": {
   "dallas": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261013%2C20261117&limit=50&offset=50&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261014%2C20261118&limit=50&offset=50&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "bexar": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261013%2C20261117&limit=50&offset=0\", waiting until \"networkidle\"\n",
-   "deeds": 0,
-   "with_consideration": 0,
-   "confirmed_codes": []
+   "confirmed_codes": [
+    "party:SUBSTITUTE TRUSTEE"
+   ],
+   "deeds": 3,
+   "with_consideration": 1,
+   "with_principal": 1,
+   "with_mortgagor": 0,
+   "with_owner": 0,
+   "with_address": 3,
+   "enrichment": {
+    "visited": 1,
+    "ocr_ran": 1,
+    "got_price": 1,
+    "got_principal": 1,
+    "got_mortgagor": 0
+   },
+   "parcels": {
+    "api_missing": [
+     "bexar"
+    ],
+    "owner_hits": 0,
+    "legal_hits": 0,
+    "unmatched": 0,
+    "bulk_hits": 0,
+    "bulk_rows": 862744
+   },
+   "warning": null
   },
   "tarrant": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261013%2C20261117&limit=50&offset=0&searchType=quickSearch&_docTypes=TR+DEED\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261014%2C20261118&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   }
  },
- "deeds": 0,
- "with_consideration": 0
+ "deeds": 3,
+ "with_consideration": 1
 }
