@@ -1,52 +1,35 @@
 {
- "generated_at": "2026-11-21T20:09:19.861431",
+ "generated_at": "2026-11-22T20:20:12.416295",
  "window": [
-  "2026-10-14",
-  "2026-11-18"
+  "2026-10-15",
+  "2026-11-19"
  ],
  "counties": {
   "dallas": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261014%2C20261118&limit=50&offset=50&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261015%2C20261119&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "bexar": {
-   "confirmed_codes": [
-    "party:SUBSTITUTE TRUSTEE"
-   ],
-   "deeds": 3,
-   "with_consideration": 1,
-   "with_principal": 1,
-   "with_mortgagor": 0,
-   "with_owner": 0,
-   "with_address": 3,
-   "enrichment": {
-    "visited": 1,
-    "ocr_ran": 1,
-    "got_price": 1,
-    "got_principal": 1,
-    "got_mortgagor": 0
-   },
-   "parcels": {
-    "api_missing": [
-     "bexar"
-    ],
-    "owner_hits": 0,
-    "legal_hits": 0,
-    "unmatched": 0,
-    "bulk_hits": 0,
-    "bulk_rows": 862744
-   },
-   "warning": null
-  },
-  "tarrant": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261014%2C20261118&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261015%2C20261119&limit=50&offset=0\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
+  },
+  "tarrant": {
+   "confirmed_codes": [],
+   "deeds": 0,
+   "with_consideration": 0,
+   "with_principal": 0,
+   "with_mortgagor": 0,
+   "with_owner": 0,
+   "with_address": 0,
+   "enrichment": {},
+   "parcels": {},
+   "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
   }
  },
- "deeds": 3,
- "with_consideration": 1
+ "deeds": 0,
+ "with_consideration": 0
 }
