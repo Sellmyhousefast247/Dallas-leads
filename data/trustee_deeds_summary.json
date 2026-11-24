@@ -1,33 +1,27 @@
 {
- "generated_at": "2026-11-22T20:20:12.416295",
+ "generated_at": "2026-11-24T00:46:02.478368",
  "window": [
-  "2026-10-15",
-  "2026-11-19"
+  "2026-10-17",
+  "2026-11-21"
  ],
  "counties": {
   "dallas": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261015%2C20261119&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261017%2C20261121&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "bexar": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261015%2C20261119&limit=50&offset=0\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261017%2C20261121&limit=50&offset=0\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "tarrant": {
-   "confirmed_codes": [],
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261017%2C20261121&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
-   "with_principal": 0,
-   "with_mortgagor": 0,
-   "with_owner": 0,
-   "with_address": 0,
-   "enrichment": {},
-   "parcels": {},
-   "warning": "tarrant: NO trustee-deed doc code confirmed \u2014 set TRUSTEE_DEED_CODES after checking that portal's document-type filter manually."
+   "confirmed_codes": []
   }
  },
  "deeds": 0,
