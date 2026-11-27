@@ -1,24 +1,24 @@
 {
- "generated_at": "2026-11-26T22:51:39.070301",
+ "generated_at": "2026-11-27T22:08:16.051786",
  "window": [
-  "2026-10-19",
-  "2026-11-23"
+  "2026-10-20",
+  "2026-11-24"
  ],
  "counties": {
   "dallas": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261019%2C20261123&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://dallas.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261020%2C20261124&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "bexar": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261019%2C20261123&limit=50&offset=0\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://bexar.tx.publicsearch.us/results?department=RP&searchType=quickSearch&searchValue=SUBSTITUTE+TRUSTEE&keywordSearch=false&searchOcrText=false&recordedDateRange=20261020%2C20261124&limit=50&offset=0\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
   },
   "tarrant": {
-   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261019%2C20261123&limit=50&offset=0&searchType=quickSearch&_docTypes=TR+DEED\", waiting until \"networkidle\"\n",
+   "error": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://tarrant.tx.publicsearch.us/results?department=RP&keywordSearch=false&searchOcrText=false&recordedDateRange=20261020%2C20261124&limit=50&offset=0&searchType=quickSearch&_docTypes=TD\", waiting until \"networkidle\"\n",
    "deeds": 0,
    "with_consideration": 0,
    "confirmed_codes": []
